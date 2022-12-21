@@ -1,4 +1,6 @@
-﻿using Volo.Abp.Autofac;
+﻿using System;
+using System.Runtime.InteropServices;
+using Volo.Abp.Autofac;
 using Volo.Abp.Modularity;
 
 namespace FuseDigital.QuickSetup.Cli;
@@ -9,4 +11,12 @@ namespace FuseDigital.QuickSetup.Cli;
 )]
 public class QuickSetupCliModule : AbpModule
 {
+    public override void ConfigureServices(ServiceConfigurationContext context)
+    {
+        base.ConfigureServices(context);
+        Configure<QuickSetupOptions>(options =>
+        {
+            options.UserProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+        });
+    }
 }
