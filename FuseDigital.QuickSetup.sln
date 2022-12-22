@@ -19,6 +19,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FuseDigital.QuickSetup.Appl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FuseDigital.QuickSetup.Cli", "src\FuseDigital.QuickSetup.Cli\FuseDigital.QuickSetup.Cli.csproj", "{861CD39F-7241-4171-BC34-11F243556AEF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FuseDigital.QuickSetup.Yaml", "src\FuseDigital.QuickSetup.Yaml\FuseDigital.QuickSetup.Yaml.csproj", "{67A92CCA-615E-4D85-B6D9-DCAA38DF7E4C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FuseDigital.QuickSetup.Yaml.Tests", "test\FuseDigital.QuickSetup.Yaml.Tests\FuseDigital.QuickSetup.Yaml.Tests.csproj", "{B512EA94-75E4-4B59-8BA8-813AD0FC6060}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -34,6 +38,8 @@ Global
 		{3446C97F-844D-4829-AD5D-2B2B36B9EA60} = {284A2B3E-2EB0-40C2-9F81-50E9720A9DA1}
 		{5722FEC5-1FD7-4215-844C-BB8C19F92797} = {284A2B3E-2EB0-40C2-9F81-50E9720A9DA1}
 		{861CD39F-7241-4171-BC34-11F243556AEF} = {1382808C-0976-4DB6-BC3F-6B7474A5B6C2}
+		{67A92CCA-615E-4D85-B6D9-DCAA38DF7E4C} = {1382808C-0976-4DB6-BC3F-6B7474A5B6C2}
+		{B512EA94-75E4-4B59-8BA8-813AD0FC6060} = {284A2B3E-2EB0-40C2-9F81-50E9720A9DA1}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{62E0CF1A-E153-48B6-8ABF-1A4DBCF5D19F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -60,5 +66,13 @@ Global
 		{861CD39F-7241-4171-BC34-11F243556AEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{861CD39F-7241-4171-BC34-11F243556AEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{861CD39F-7241-4171-BC34-11F243556AEF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{67A92CCA-615E-4D85-B6D9-DCAA38DF7E4C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{67A92CCA-615E-4D85-B6D9-DCAA38DF7E4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{67A92CCA-615E-4D85-B6D9-DCAA38DF7E4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{67A92CCA-615E-4D85-B6D9-DCAA38DF7E4C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B512EA94-75E4-4B59-8BA8-813AD0FC6060}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B512EA94-75E4-4B59-8BA8-813AD0FC6060}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B512EA94-75E4-4B59-8BA8-813AD0FC6060}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B512EA94-75E4-4B59-8BA8-813AD0FC6060}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

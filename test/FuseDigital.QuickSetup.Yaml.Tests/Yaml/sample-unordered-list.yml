@@ -1,0 +1,60 @@
+- sample-key: SampleKey08
+  sample-value: SampleValue08
+  sample-list:
+    - James
+    - John
+    - Mary
+- sample-key: SampleKey02
+  sample-value: SampleValue02
+  sample-list:
+    - James
+    - John
+    - Mary
+- sample-key: SampleKey03
+  sample-value: SampleValue03
+  sample-list:
+    - James
+    - John
+    - Mary
+- sample-key: SampleKey04
+  sample-value: SampleValue04
+  sample-list:
+    - James
+    - John
+    - Mary
+- sample-key: SampleKey05
+  sample-value: SampleValue05
+  sample-list:
+    - James
+    - John
+    - Mary
+- sample-key: SampleKey06
+  sample-value: SampleValue06
+  sample-list:
+    - James
+    - John
+    - Mary
+- sample-key: SampleKey10
+  sample-value: SampleValue10
+  sample-list:
+    - James
+    - John
+    - Mary
+- sample-key: SampleKey07
+  sample-value: SampleValue07
+  sample-list:
+    - James
+    - John
+    - Mary
+- sample-key: SampleKey09
+  sample-value: SampleValue09
+  sample-list:
+    - James
+    - John
+    - Mary
+- sample-key: SampleKey01
+  sample-value: SampleValue01
+  sample-list:
+    - James
+    - John
+    - Mary
