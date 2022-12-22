@@ -13,6 +13,7 @@
   
     <ItemGroup>
         <ProjectReference Include="..\FuseDigital.QuickSetup.TestBase\FuseDigital.QuickSetup.TestBase.csproj" />
+        <ProjectReference Include="..\FuseDigital.QuickSetup.Yaml.Tests\FuseDigital.QuickSetup.Yaml.Tests.csproj" />
     </ItemGroup>
 
 </Project>

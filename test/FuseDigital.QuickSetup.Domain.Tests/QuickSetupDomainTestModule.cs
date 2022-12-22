@@ -3,8 +3,9 @@
 namespace FuseDigital.QuickSetup;
 
 [DependsOn(
-    typeof(QuickSetupTestBaseModule)
-    )]
+    typeof(QuickSetupTestBaseModule),
+    typeof(QuickSetupYamlTestModule)
+)]
 public class QuickSetupDomainTestModule : AbpModule
 {
 }
