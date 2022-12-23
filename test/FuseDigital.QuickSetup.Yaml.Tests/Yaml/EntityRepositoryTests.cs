@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -271,8 +270,6 @@ public class EntityRepositoryTests : QuickSetupYamlTestBase
         output.Count.ShouldBe(3);
     }
 
-    
-
     private async Task CopyFileAsync(string source, string destination)
     {
         var content = GetFileContents(source);
@@ -310,7 +307,6 @@ public class EntityRepositoryTests : QuickSetupYamlTestBase
 
     private SampleRepository GetSampleRepository(IYamlContext context = default)
     {
-        var methodName = new StackTrace().GetFrame(1)?.GetMethod()?.Name;
         return new SampleRepository(context ?? GetContext())
         {
             LazyServiceProvider = GetService<IAbpLazyServiceProvider>()

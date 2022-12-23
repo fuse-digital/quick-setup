@@ -1,0 +1,2 @@
+﻿- relative-path: ~/organization/project/repository
+  repository: git@ssh.dev.azure.com:v3/organization/project/repository
