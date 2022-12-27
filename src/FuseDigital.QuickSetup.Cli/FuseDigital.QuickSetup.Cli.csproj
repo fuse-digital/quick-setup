@@ -1,30 +1,49 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
-    <Import Project="..\..\common.props" />
+    <Import Project="..\..\common.props"/>
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
         <TargetFramework>net7.0</TargetFramework>
         <PackAsTool>true</PackAsTool>
-        <ToolCommandName>abp</ToolCommandName>
+        <ToolCommandName>qup</ToolCommandName>
+        <PackageOutputPath>./nupkg</PackageOutputPath>
         <RootNamespace>FuseDigital.QuickSetup.Cli</RootNamespace>
         <UserSecretsId>FuseDigital.QuickSetup.Cli</UserSecretsId>
+        <PackageId>FuseDigital.QuickSetup</PackageId>
+        <Authors>Fuse Digital</Authors>
+        <Company>Fuse Digital (PTY) Limited</Company>
+        <Copyright>Copyright (c) Fuse Digital (PTY) LTD 2022</Copyright>
+        <Description>
+            QuickSetup (QUP) is a command line tool designed to streamline the process of setting up a new machine and
+            installing the required software. With just a few simple commands, QUP can help you get your new machine up
+            and running quickly and efficiently, saving you time and effort.
+        </Description>
+        <PackageProjectUrl>https://github.com/fuse-digital/quick-setup</PackageProjectUrl>
+        <PackageLicenseExpression>LGPL-3.0-only</PackageLicenseExpression>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <RespositoryType>git</RespositoryType>
+        <RepositoryUrl>https://github.com/fuse-digital/quick-setup</RepositoryUrl>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Serilog.Extensions.Logging" Version="3.1.0" />
-        <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
-        <PackageReference Include="Serilog.Sinks.Console" Version="4.1.0" />
-        <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="7.0.0" />
+        <PackageReference Include="Serilog.Extensions.Logging" Version="3.1.0"/>
+        <PackageReference Include="Serilog.Sinks.File" Version="5.0.0"/>
+        <PackageReference Include="Serilog.Sinks.Console" Version="4.1.0"/>
+        <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="7.0.0"/>
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Volo.Abp.Autofac" Version="6.0.2" />
+        <PackageReference Include="Volo.Abp.Autofac" Version="6.0.2"/>
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\FuseDigital.QuickSetup.Application\FuseDigital.QuickSetup.Application.csproj" />
-        <ProjectReference Include="..\FuseDigital.QuickSetup.Yaml\FuseDigital.QuickSetup.Yaml.csproj" />
+        <ProjectReference Include="..\FuseDigital.QuickSetup.Application\FuseDigital.QuickSetup.Application.csproj"/>
+        <ProjectReference Include="..\FuseDigital.QuickSetup.Yaml\FuseDigital.QuickSetup.Yaml.csproj"/>
+    </ItemGroup>
+    
+    <ItemGroup>
+        <None Include="..\..\README.md" Pack="true" PackagePath="\"/>
     </ItemGroup>
 
 </Project>
