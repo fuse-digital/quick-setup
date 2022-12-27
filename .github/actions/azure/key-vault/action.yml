@@ -1,0 +1,26 @@
+name: key-vault
+description: 'Retrieve a secret from Azure Key Vault'
+
+inputs:
+  vault-name:
+    description: 'The name of the Key Vault'
+    required: true
+  name:
+    description: 'The name of the secret'
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - id: vault
+      uses: azure/cli@v1
+      with:
+        inlineScript: |
+          SECRET_VALUE=$(az keyvault secret show --name "${{ inputs.name }}" --vault-name "${{ inputs.vault-name }}" --query "value" -o tsv)
+          echo "::add-mask::$SECRET_VALUE"
+          echo "secret=$SECRET_VALUE" >> $GITHUB_OUTPUT
+
+outputs:
+  secret:
+    description: 'The secret value retrieved from the vault.'
+    value: ${{ steps.vault.outputs.secret }}

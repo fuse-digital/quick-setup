@@ -1,0 +1,50 @@
+name: nuget
+description: 'Publish NuGet packages'
+
+inputs:
+  dotnet-version:
+    description: 'The dotnet framework and SDK version.'
+    default: 7.0.x
+    required: true
+  azure-service-principle:
+    description: 'The service principle credentials for Azure to access the key vault'
+    required: true
+  key-vault-name:
+    description: 'The name of the key vault'
+    required: true
+  nuget-key-name:
+    description: 'The name of the secret for the NuGet API key'
+    default: 'nuget-api-key'
+    required: true
+  packages-directory:
+    description: 'The root directory of the NuGet packages that should be published'
+  server-url:
+    description: 'Specifies the NuGet server URL'
+    required: true
+    default: 'https://api.nuget.org/v3/index.json'
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup dotnet environment
+      uses: actions/setup-dotnet@v3
+      id: setup
+      with:
+        dotnet-version: ${{ inputs.dotnet-version }}
+
+    - name: Azure login
+      uses: azure/login@v1
+      with:
+        creds: ${{ inputs.azure-service-principle }}
+
+    - name: Retrieve secret from key vault
+      uses: './.github/actions/azure/key-vault'
+      id: nuget-api-key
+      with:
+        vault-name: ${{ inputs.key-vault-name }}
+        name: ${{ inputs.nuget-key-name }}
+
+    - name: Publish to NuGet
+      working-directory: ${{ inputs.packages-directory }}
+      shell: bash
+      run: 'dotnet nuget push "*.nupkg" --skip-duplicate --api-key ${{ steps.nuget-api-key.outputs.secret }} --source ${{ inputs.server-url }}'
