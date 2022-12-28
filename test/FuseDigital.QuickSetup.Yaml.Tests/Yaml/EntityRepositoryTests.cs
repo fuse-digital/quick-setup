@@ -38,13 +38,6 @@ public class EntityRepositoryTests : QuickSetupYamlTestBase
         public override Func<SampleEntity, object> SortOrder<TKey>() => entity => entity.SampleKey;
     }
 
-    private readonly string _basePath;
-
-    public EntityRepositoryTests()
-    {
-        _basePath = Guid.NewGuid().ToString();
-    }
-
     [Fact]
     public void Repository_Should_Resolve_FileName()
     {
@@ -194,14 +187,14 @@ public class EntityRepositoryTests : QuickSetupYamlTestBase
         // Assert
         (await repository.GetCountAsync()).ShouldBe(9);
     }
-    
+
     [Fact]
     public async Task DeleteAsync_Should_Throw_Exception_When_Entity_Does_Not_Exists()
     {
         // Arrange
         var repository = GetSampleRepository();
         await CopyFileAsync("sample-list.yml", repository.FilePath);
-        
+
         // Act
         var exception = await Should.ThrowAsync<EntityNotFoundException>(async () =>
         {
@@ -212,17 +205,17 @@ public class EntityRepositoryTests : QuickSetupYamlTestBase
         // Assert
         exception.ShouldNotBeNull();
     }
-    
+
     [Fact]
     public async Task DeleteAsync_Should_Remove_Entities_That_Match_Expression()
     {
         // Arrange
         var repository = GetSampleRepository();
         await CopyFileAsync("sample-list.yml", repository.FilePath);
-        
+
         // Act
         await repository.DeleteAsync(x => x.SampleKey.StartsWith("SampleKey0"));
-        
+
         // Assert
         (await repository.CountAsync()).ShouldBe(1);
     }
@@ -233,25 +226,25 @@ public class EntityRepositoryTests : QuickSetupYamlTestBase
         // Arrange
         var repository = GetSampleRepository();
         await CopyFileAsync("sample-list.yml", repository.FilePath);
-        
+
         // Act
         var output = await repository.FindAsync(x => x.SampleValue.EndsWith("08"));
-        
+
         // Assert
         output.ShouldNotBeNull();
         output.SampleValue.ShouldEndWith("08");
     }
-    
+
     [Fact]
     public async Task FindAsync_Should_Return_Null_Empty_When_No_Entity_Match_Expression_Function()
     {
         // Arrange
         var repository = GetSampleRepository();
         await CopyFileAsync("sample-list.yml", repository.FilePath);
-        
+
         // Act
         var output = await repository.FindAsync(x => x.SampleValue.EndsWith("69"));
-        
+
         // Assert
         output.ShouldBeNull();
     }
@@ -262,10 +255,10 @@ public class EntityRepositoryTests : QuickSetupYamlTestBase
         // Arrange
         var repository = GetSampleRepository();
         await CopyFileAsync("sample-list.yml", repository.FilePath);
-        
+
         // Act
         var output = await repository.GetPagedListAsync(3, 3);
-        
+
         // Assert
         output.Count.ShouldBe(3);
     }
@@ -295,33 +288,14 @@ public class EntityRepositoryTests : QuickSetupYamlTestBase
         };
     }
 
-    private IYamlContext GetContext()
+    private SampleRepository GetSampleRepository()
     {
         var context = GetRequiredService<IYamlContext>();
-        var folder = GetTestMethodName() ?? Guid.NewGuid().ToString();
+        context.Options.BaseDirectory = Settings.BaseDirectory;
 
-        context.Options.BaseDirectory = Path.Combine(_basePath, folder);
-
-        return context;
-    }
-
-    private SampleRepository GetSampleRepository(IYamlContext context = default)
-    {
-        return new SampleRepository(context ?? GetContext())
+        return new SampleRepository(context)
         {
             LazyServiceProvider = GetService<IAbpLazyServiceProvider>()
         };
-    }
-
-    public override void Dispose()
-    {
-        var context = GetRequiredService<IYamlContext>();
-        var path = Path.Combine(context.Options.UserProfile, _basePath);
-        if (Directory.Exists(path))
-        {
-            Directory.Delete(path, true);
-        }
-
-        base.Dispose();
     }
 }
