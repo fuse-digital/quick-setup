@@ -7,15 +7,6 @@ namespace FuseDigital.QuickSetup;
 
 public abstract class QuickSetupYamlTestBase : QuickSetupTestBase<QuickSetupYamlTestModule>
 {
-    protected string GetTestMethodName()
-    {
-        return new StackTrace()
-            .GetFrames()
-            .FirstOrDefault(x => x.GetMethod()!.Name.Contains("_"))
-            ?.GetMethod()
-            ?.Name;
-    }
-    
     protected string GetFileContents(string fileName)
     {
         var fullyQualifiedName = $"{GetType().Namespace}.{fileName}";

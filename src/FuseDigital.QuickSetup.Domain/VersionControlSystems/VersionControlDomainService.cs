@@ -19,7 +19,7 @@ public class VersionControlDomainService : DomainService, IVersionControlDomainS
         var workingDirectory = _options.GetAbsolutePath(relativePath);
         Logger.LogInformation("The absolute path is {AbsolutePath}", workingDirectory);
         Logger.LogInformation("Cloning {Repository} into {RelativePath}", sourceUrl, relativePath);
-        RunGitCommand(new[] { "clone", sourceUrl, relativePath });
+        RunGitCommand(new[] { "clone", sourceUrl, workingDirectory });
     }
 
     private static void RunGitCommand(IEnumerable<string> args)
