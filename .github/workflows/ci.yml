@@ -1,0 +1,21 @@
+name: quick-setup-ci
+run-name: Build pipeline after ${{github.event_name}} by @${{ github.actor }}
+
+on:
+  workflow_dispatch:
+
+  push:
+    branches:
+      - master
+      - feature/**
+
+  pull_request:
+    branches:
+      - feature/**
+
+jobs:
+  continuous-integration:
+    uses: ./.github/workflows/build.yml
+    with:
+      pack: false
+    secrets: inherit
