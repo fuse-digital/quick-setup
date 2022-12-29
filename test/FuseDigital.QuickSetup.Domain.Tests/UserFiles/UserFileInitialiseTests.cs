@@ -21,10 +21,10 @@ public class UserFileInitialiseTests : QuickSetupDomainTestBase
         var domainService = new UserFileDomainService(Options, versionControl);
 
         // Act
-        await domainService.Initialise(remoteUrl, defaultBranch);
+        await domainService.InitialiseAsync(remoteUrl, defaultBranch);
 
         // Assert
-        A.CallTo(() => versionControl.Init(Settings.UserProfile, default)).MustHaveHappened();
+        A.CallTo(() => versionControl.Init(Settings.UserProfile, default, default)).MustHaveHappened();
         A.CallTo(() => versionControl.Add(".", default)).MustHaveHappened();
         A.CallTo(() => versionControl.Commit(default, default)).MustHaveHappened();
         A.CallTo(() => versionControl.RenameBranch(defaultBranch, default)).MustHaveHappened();
@@ -46,14 +46,14 @@ public class UserFileInitialiseTests : QuickSetupDomainTestBase
         // Act
         var exception = await Should.ThrowAsync<RepositoryAlreadyExistsException>(async () =>
         {
-            await domainService.Initialise(remoteUrl, defaultBranch);
+            await domainService.InitialiseAsync(remoteUrl, defaultBranch);
         });
 
         // Assert
         exception.ShouldNotBeNull();
         exception.Message.ShouldBe(Settings.UserProfile);
         
-        A.CallTo(() => versionControl.Init(Settings.UserProfile, default)).MustNotHaveHappened();
+        A.CallTo(() => versionControl.Init(Settings.UserProfile, default, default)).MustNotHaveHappened();
         A.CallTo(() => versionControl.Add(".", default)).MustNotHaveHappened();
         A.CallTo(() => versionControl.Commit(default, default)).MustNotHaveHappened();
         A.CallTo(() => versionControl.RenameBranch(defaultBranch, default)).MustNotHaveHappened();

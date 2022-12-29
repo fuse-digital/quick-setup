@@ -28,10 +28,19 @@ public class VersionControlDomainService : DomainService, IVersionControlDomainS
         return RunGitCommand(new[] { "clone", sourceUrl, workingDirectory });
     }
 
-    public IEnumerable<string> Init(string workingDirectory, IEnumerable<string> args = default)
+    public IEnumerable<string> Init(string workingDirectory, 
+        IEnumerable<string> args = default,
+        bool changeWorkingDirectory = false)
     {
         Check.NotNullOrEmpty(workingDirectory, nameof(workingDirectory));
-        return RunGitCommand(new[] { "init", workingDirectory }, args);
+        var output = RunGitCommand(new[] { "init", workingDirectory }, args);
+
+        if (changeWorkingDirectory)
+        {
+            WorkingDirectory = workingDirectory;
+        }
+
+        return output;
     }
 
     public IEnumerable<string> SetConfig(string key, string value, bool global = false)

@@ -23,10 +23,11 @@ public class UserFileDomainService : DomainService, IUserFileDomainService
         return Directory.Exists(path);
     }
 
-    public async Task Initialise(string sourceUrl, string defaultBranch)
+    public async Task InitialiseAsync(string sourceUrl, string defaultBranch)
     {
         Check.NotNull(sourceUrl, nameof(sourceUrl));
         Check.NotNull(defaultBranch, nameof(defaultBranch));
+
         if (Exists())
         {
             throw new RepositoryAlreadyExistsException(_options.UserProfile);

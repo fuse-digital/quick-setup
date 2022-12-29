@@ -10,7 +10,9 @@ public interface IVersionControlDomainService : IDomainService
 
     IEnumerable<string> Clone(string sourceUrl, string relativePath);
 
-    IEnumerable<string> Init(string workingDirectory, IEnumerable<string> args = default);
+    IEnumerable<string> Init(string workingDirectory, 
+        IEnumerable<string> args = default,
+        bool changeWorkingDirectory = false);
 
     IEnumerable<string> Add(string pathSpec, IEnumerable<string> args = default);
 
