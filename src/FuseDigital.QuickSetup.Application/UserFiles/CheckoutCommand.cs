@@ -1,25 +1,26 @@
+﻿using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using Volo.Abp.DependencyInjection;
 
 namespace FuseDigital.QuickSetup.UserFiles;
 
-public class InitialiseCommand : UserFilesCommandAsync, ITransientDependency
+public class CheckoutCommand : UserFilesCommandAsync, ITransientDependency
 {
-    public InitialiseCommand(IOptions<QuickSetupOptions> options, IUserFileDomainService userFileServiceDomainService) 
+    public CheckoutCommand(IOptions<QuickSetupOptions> options, IUserFileDomainService userFileServiceDomainService)
         : base(options, userFileServiceDomainService)
     {
     }
 
     public override async Task ExecuteAsync(IQupCommandOptions options)
     {
-        var init = (InitialiseOptions)options;
+        var input = (CheckoutOptions)options;
         if (UserFileService.Exists())
         {
             DisplayRepositoryExists();
             return;
         }
 
-        await UserFileService.InitialiseAsync(init.Repository, init.DefaultBranchName);
+        await UserFileService.CheckoutAsync(input.Repository, input.Branch);
     }
 }

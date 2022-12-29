@@ -2,10 +2,6 @@ name: quick-setup-cd
 run-name: Publish pipeline after ${{github.event_name}} by @${{ github.actor }}
 
 on:
-  create:
-    branches:
-      - release/**
-
   push:
     branches:
       - release/**
