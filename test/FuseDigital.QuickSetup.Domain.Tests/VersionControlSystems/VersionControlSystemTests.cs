@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -67,7 +68,7 @@ public sealed class VersionControlSystemTests : QuickSetupDomainTestBase
         // Assert
         _versionControlSystem
             .Status()
-            .Count(x => x.Contains("new file:") && x.Contains(filename))
+            .Count(x => x.Contains("new file:", StringComparison.InvariantCultureIgnoreCase) && x.Contains(filename, StringComparison.InvariantCultureIgnoreCase))
             .ShouldBe(1);
     }
     
@@ -83,7 +84,7 @@ public sealed class VersionControlSystemTests : QuickSetupDomainTestBase
         
         // Assert
         output
-            .Count(x => x.Contains(filename))
+            .Count(x => x.Contains(filename, StringComparison.InvariantCultureIgnoreCase))
             .ShouldBe(1);
     }
     
@@ -100,7 +101,7 @@ public sealed class VersionControlSystemTests : QuickSetupDomainTestBase
         // Assert
         _versionControlSystem
             .Status()
-            .Count(x => x.Contains($"On branch {name}"))
+            .Count(x => x.Contains($"On branch {name}", StringComparison.InvariantCultureIgnoreCase))
             .ShouldBe(1);
     }
 
@@ -119,7 +120,7 @@ public sealed class VersionControlSystemTests : QuickSetupDomainTestBase
 
         // Assert
         output
-            .Count(x => x.Contains($"branch '{name}' set up to track 'origin/{name}'."))
+            .Count(x => x.Contains($"branch '{name}' set up to track", StringComparison.CurrentCultureIgnoreCase))
             .ShouldBe(1);
     }
 }
