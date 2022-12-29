@@ -5,7 +5,7 @@ namespace FuseDigital.QuickSetup.VersionControlSystems;
 public interface IVersionControlDomainService : IDomainService
 {
     string WorkingDirectory { get; set; }
-    
+
     string RepositoryDirectory { get; }
 
     IEnumerable<string> Clone(string sourceUrl, string relativePath);
@@ -27,4 +27,8 @@ public interface IVersionControlDomainService : IDomainService
     IEnumerable<string> AddRemote(string remoteUrl, IEnumerable<string> args = default);
 
     IEnumerable<string> PushSetUpstream(string branch, IEnumerable<string> args = default);
+
+    IEnumerable<string> Fetch(IEnumerable<string> args = default);
+
+    IEnumerable<string> Checkout(string branch, IEnumerable<string> args = default);
 }

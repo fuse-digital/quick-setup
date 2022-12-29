@@ -100,6 +100,17 @@ public class VersionControlDomainService : DomainService, IVersionControlDomainS
         return RunGitCommand(new[] { "push", "-u", "origin", branch }, args);
     }
 
+    public IEnumerable<string> Fetch(IEnumerable<string> args = default)
+    {
+        return RunGitCommand(new[] { "fetch", "--prune" }, args);
+    }
+
+    public IEnumerable<string> Checkout(string branch, IEnumerable<string> args = default)
+    {
+        Check.NotNullOrEmpty(branch, nameof(branch));
+        return RunGitCommand(new[] { "checkout", "-t", $"origin/{branch}", "-f" });
+    }
+
     private IEnumerable<string> RunGitCommand(IEnumerable<string> command, IEnumerable<string> args = default)
     {
         var arguments = command.Concat(args ?? new List<string>());
@@ -110,7 +121,7 @@ public class VersionControlDomainService : DomainService, IVersionControlDomainS
         var output = process?.StandardOutput.ReadToEnd();
         process?.WaitForExit();
 
-        return output.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
+        return output?.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries) ?? Array.Empty<string>();
     }
 
     private ProcessStartInfo GitCommand(IEnumerable<string> args)

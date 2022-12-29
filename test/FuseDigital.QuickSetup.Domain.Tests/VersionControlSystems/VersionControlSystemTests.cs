@@ -10,8 +10,13 @@ namespace FuseDigital.QuickSetup.VersionControlSystems;
 
 public sealed class VersionControlSystemTests : QuickSetupDomainTestBase
 {
-
     private readonly VersionControlDomainService _versionControlSystem;
+    private const string RepoRelativePath = "~/projects/dot-files";
+    private const string Filename = "README.md";
+    private const string BranchName = "trunk";
+    private string RepoWorkingDirectory { get; }
+    private string SecondRepoWorkingDirectory { get; }
+    private string RemoteUrl { get; }
 
     public VersionControlSystemTests()
     {
@@ -19,58 +24,78 @@ public sealed class VersionControlSystemTests : QuickSetupDomainTestBase
         {
             LazyServiceProvider = GetRequiredService<IAbpLazyServiceProvider>()
         };
+        RepoWorkingDirectory = Settings.GetAbsolutePath(RepoRelativePath);
+        SecondRepoWorkingDirectory = Settings.GetAbsolutePath("~/projects/dot-files-second");
+        RemoteUrl = Settings.GetAbsolutePath($"~/server/dot-files.git");
     }
 
     [Fact]
     public void Clone_Should_Create_Repository_In_Working_Directory()
     {
         // Arrange
-        var relativePath = "~/projects/dot-files";
-        var sourceUrl = Settings.GetAbsolutePath($"{relativePath}.git");
-        var workingDirectory = Settings.GetAbsolutePath(relativePath);
-        _versionControlSystem.Init(sourceUrl, new[] { "--bare", "-b", "trunk" });
+        _versionControlSystem.Init(RemoteUrl, new[] { "--bare", "-b", BranchName });
 
         // Act
-        _versionControlSystem.Clone(sourceUrl, relativePath);
+        _versionControlSystem.Clone(RemoteUrl, RepoRelativePath);
 
         // Assert
-        Directory.Exists(workingDirectory).ShouldBeTrue();
+        Directory.Exists(RepoWorkingDirectory).ShouldBeTrue();
+    }
+
+    [Fact]
+    public async Task Fetch_Should_Retrieve_Metadata_From_Remote_Repository()
+    {
+        // Arrange
+        await PushSetUpstream_Should_Execute_From_With_In_The_Working_Directory();
+        _versionControlSystem.Init(SecondRepoWorkingDirectory, changeWorkingDirectory: true);
+        _versionControlSystem.AddRemote(RemoteUrl);
+
+        // Act
+        _versionControlSystem.Fetch();
+
+        // Assert
+        Directory.Exists(SecondRepoWorkingDirectory).ShouldBeTrue();
+    }
+
+    [Fact]
+    public async Task Checkout_Should_Retrieve_Files_From_Remote_Repository()
+    {
+        // Arrange
+        await Fetch_Should_Retrieve_Metadata_From_Remote_Repository();
+
+        // Act
+        _versionControlSystem.Checkout(BranchName);
+
+        // Assert
+        File.Exists(Path.Combine(SecondRepoWorkingDirectory, Filename)).ShouldBeTrue();
     }
 
     [Fact]
     public void Init_Should_Create_Repository_In_Working_Direcotry()
     {
-        // Arrange
-        var relativePath = "~/projects/dot-files.git";
-        var workingDirectory = Settings.GetAbsolutePath(relativePath);
-
         // Act
-        _versionControlSystem.Init(workingDirectory);
+        _versionControlSystem.Init(RepoWorkingDirectory);
 
         // Assert
-        Directory.Exists(Path.Combine(workingDirectory, ".git")).ShouldBeTrue();
+        Directory.Exists(Path.Combine(RepoWorkingDirectory, ".git")).ShouldBeTrue();
     }
 
     [Fact]
     public async Task Add_Should_Stage_Files_From_With_In_The_Working_Directory()
     {
         // Arrange
-        var relativePath = "~/projects/dot-files";
-        var workingDirectory = Settings.GetAbsolutePath(relativePath);
-        _versionControlSystem.Init(workingDirectory);
-
-        const string filename = "README.md";
-        await File.WriteAllTextAsync(Path.Combine(workingDirectory, filename), "# qup-empty-dotfiles");
+        _versionControlSystem.Init(RepoWorkingDirectory, changeWorkingDirectory: true);
+        await File.WriteAllTextAsync(Path.Combine(RepoWorkingDirectory, Filename), "# qup-empty-dotfiles");
 
         // Act
-        _versionControlSystem.WorkingDirectory = workingDirectory;
-        _versionControlSystem.Add(filename);
+        _versionControlSystem.Add(Filename);
 
         // Assert
         _versionControlSystem
             .Status()
-            .Count(x => x.Contains("new file:", StringComparison.InvariantCultureIgnoreCase)
-                        && x.Contains(filename, StringComparison.InvariantCultureIgnoreCase))
+            .Count(x =>
+                x.Contains("new file:", StringComparison.InvariantCultureIgnoreCase)
+                && x.Contains(Filename, StringComparison.InvariantCultureIgnoreCase))
             .ShouldBe(1);
     }
 
@@ -78,7 +103,6 @@ public sealed class VersionControlSystemTests : QuickSetupDomainTestBase
     public async Task Commit_Should_Execute_From_With_In_The_Working_Directory()
     {
         // Arrange
-        const string filename = "README.md";
         await Add_Should_Stage_Files_From_With_In_The_Working_Directory();
         _versionControlSystem.SetConfig("user.email", "john@doe.com");
         _versionControlSystem.SetConfig("user.name", "john@doe.com");
@@ -88,7 +112,7 @@ public sealed class VersionControlSystemTests : QuickSetupDomainTestBase
 
         // Assert
         output
-            .Count(x => x.Contains(filename, StringComparison.InvariantCultureIgnoreCase))
+            .Count(x => x.Contains(Filename, StringComparison.InvariantCultureIgnoreCase))
             .ShouldBe(1);
     }
 
@@ -96,16 +120,15 @@ public sealed class VersionControlSystemTests : QuickSetupDomainTestBase
     public async Task RenameBranch_Should_Execute_From_With_In_The_Working_Directory()
     {
         // Arrange
-        const string name = "trunk";
         await Commit_Should_Execute_From_With_In_The_Working_Directory();
 
         // Act
-        _versionControlSystem.RenameBranch(name);
+        _versionControlSystem.RenameBranch(BranchName);
 
         // Assert
         _versionControlSystem
             .Status()
-            .Count(x => x.Contains($"On branch {name}", StringComparison.InvariantCultureIgnoreCase))
+            .Count(x => x.Contains($"On branch {BranchName}", StringComparison.InvariantCultureIgnoreCase))
             .ShouldBe(1);
     }
 
@@ -113,18 +136,16 @@ public sealed class VersionControlSystemTests : QuickSetupDomainTestBase
     public async Task PushSetUpstream_Should_Execute_From_With_In_The_Working_Directory()
     {
         // Arrange
-        const string name = "trunk";
-        var remoteUrl = Settings.GetAbsolutePath($"~/server/dot-files.git");
-        _versionControlSystem.Init(remoteUrl, new[] { "--bare", "-b", name });
+        _versionControlSystem.Init(RemoteUrl, new[] { "--bare", "-b", BranchName });
         await RenameBranch_Should_Execute_From_With_In_The_Working_Directory();
 
         // Act
-        _versionControlSystem.AddRemote(remoteUrl);
-        var output = _versionControlSystem.PushSetUpstream(name);
+        _versionControlSystem.AddRemote(RemoteUrl);
+        var output = _versionControlSystem.PushSetUpstream(BranchName);
 
         // Assert
         output
-            .Count(x => x.Contains($"branch '{name}' set up to track", StringComparison.CurrentCultureIgnoreCase))
+            .Count(x => x.Contains($"branch '{BranchName}' set up to track", StringComparison.CurrentCultureIgnoreCase))
             .ShouldBe(1);
     }
 }
