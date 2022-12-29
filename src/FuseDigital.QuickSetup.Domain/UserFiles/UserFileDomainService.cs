@@ -43,6 +43,24 @@ public class UserFileDomainService : DomainService, IUserFileDomainService
         _versionControl.PushSetUpstream(defaultBranch);
     }
 
+    public Task CheckoutAsync(string sourceUrl, string branch)
+    {
+        Check.NotNull(sourceUrl, nameof(sourceUrl));
+        Check.NotNull(branch, nameof(branch));
+
+        if (Exists())
+        {
+            throw new RepositoryAlreadyExistsException(_options.UserProfile);
+        }
+
+        _versionControl.Init(_options.UserProfile);
+        _versionControl.AddRemote(sourceUrl);
+        _versionControl.Fetch();
+        _versionControl.Checkout(branch);
+
+        return Task.CompletedTask;
+    }
+
     private async Task CreateIgnoreFile()
     {
         var ignore = new[]

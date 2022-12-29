@@ -7,4 +7,6 @@ public interface IUserFileDomainService : IDomainService
     bool Exists();
 
     Task InitialiseAsync(string sourceUrl, string defaultBranch);
+
+    Task CheckoutAsync(string sourceUrl, string branch);
 }
