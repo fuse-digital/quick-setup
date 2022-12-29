@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Runtime.InteropServices;
+using System.IO;
+using System.Reflection;
 using Volo.Abp.Autofac;
 using Volo.Abp.Modularity;
 
@@ -17,7 +18,13 @@ public class QuickSetupCliModule : AbpModule
         base.ConfigureServices(context);
         Configure<QuickSetupOptions>(options =>
         {
+#if DEBUG
+            var debugPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            options.UserProfile = Path.Combine(debugPath, Guid.NewGuid().ToString());
+            Directory.CreateDirectory(options.UserProfile);
+#else
             options.UserProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+#endif
         });
     }
 }

@@ -14,6 +14,8 @@ public interface IVersionControlDomainService : IDomainService
 
     IEnumerable<string> Add(string pathSpec, IEnumerable<string> args = default);
 
+    IEnumerable<string> SetConfig(string key, string value, bool global = false);
+
     IEnumerable<string> Status(IEnumerable<string> args = default);
 
     IEnumerable<string> Commit(string message = default, IEnumerable<string> args = default);

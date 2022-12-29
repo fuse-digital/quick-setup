@@ -10,6 +10,7 @@ namespace FuseDigital.QuickSetup.VersionControlSystems;
 
 public sealed class VersionControlSystemTests : QuickSetupDomainTestBase
 {
+
     private readonly VersionControlDomainService _versionControlSystem;
 
     public VersionControlSystemTests()
@@ -27,7 +28,7 @@ public sealed class VersionControlSystemTests : QuickSetupDomainTestBase
         var relativePath = "~/projects/dot-files";
         var sourceUrl = Settings.GetAbsolutePath($"{relativePath}.git");
         var workingDirectory = Settings.GetAbsolutePath(relativePath);
-        _versionControlSystem.Init(sourceUrl, new[] {"--bare", "-b", "trunk"});
+        _versionControlSystem.Init(sourceUrl, new[] { "--bare", "-b", "trunk" });
 
         // Act
         _versionControlSystem.Clone(sourceUrl, relativePath);
@@ -42,10 +43,10 @@ public sealed class VersionControlSystemTests : QuickSetupDomainTestBase
         // Arrange
         var relativePath = "~/projects/dot-files.git";
         var workingDirectory = Settings.GetAbsolutePath(relativePath);
-        
+
         // Act
         _versionControlSystem.Init(workingDirectory);
-        
+
         // Assert
         Directory.Exists(Path.Combine(workingDirectory, ".git")).ShouldBeTrue();
     }
@@ -60,44 +61,47 @@ public sealed class VersionControlSystemTests : QuickSetupDomainTestBase
 
         const string filename = "README.md";
         await File.WriteAllTextAsync(Path.Combine(workingDirectory, filename), "# qup-empty-dotfiles");
-        
+
         // Act
         _versionControlSystem.WorkingDirectory = workingDirectory;
         _versionControlSystem.Add(filename);
-        
+
         // Assert
         _versionControlSystem
             .Status()
-            .Count(x => x.Contains("new file:", StringComparison.InvariantCultureIgnoreCase) && x.Contains(filename, StringComparison.InvariantCultureIgnoreCase))
+            .Count(x => x.Contains("new file:", StringComparison.InvariantCultureIgnoreCase)
+                        && x.Contains(filename, StringComparison.InvariantCultureIgnoreCase))
             .ShouldBe(1);
     }
-    
+
     [Fact]
     public async Task Commit_Should_Execute_From_With_In_The_Working_Directory()
     {
         // Arrange
         const string filename = "README.md";
         await Add_Should_Stage_Files_From_With_In_The_Working_Directory();
-        
+        _versionControlSystem.SetConfig("user.email", "john@doe.com");
+        _versionControlSystem.SetConfig("user.name", "john@doe.com");
+
         // Act
-        var output = _versionControlSystem.Commit("First commit");
-        
+        var output = _versionControlSystem.Commit("First commit").ToList();
+
         // Assert
         output
             .Count(x => x.Contains(filename, StringComparison.InvariantCultureIgnoreCase))
             .ShouldBe(1);
     }
-    
+
     [Fact]
     public async Task RenameBranch_Should_Execute_From_With_In_The_Working_Directory()
     {
         // Arrange
         const string name = "trunk";
         await Commit_Should_Execute_From_With_In_The_Working_Directory();
-        
+
         // Act
         _versionControlSystem.RenameBranch(name);
-        
+
         // Assert
         _versionControlSystem
             .Status()
@@ -111,7 +115,7 @@ public sealed class VersionControlSystemTests : QuickSetupDomainTestBase
         // Arrange
         const string name = "trunk";
         var remoteUrl = Settings.GetAbsolutePath($"~/server/dot-files.git");
-        _versionControlSystem.Init(remoteUrl, new[] {"--bare", "-b", name});
+        _versionControlSystem.Init(remoteUrl, new[] { "--bare", "-b", name });
         await RenameBranch_Should_Execute_From_With_In_The_Working_Directory();
 
         // Act

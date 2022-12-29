@@ -31,9 +31,23 @@ public abstract class QuickSetupTestBase<TStartupModule> : AbpIntegratedTest<TSt
     {
         if (Directory.Exists(Settings.UserProfile))
         {
+            SetAttributes(new DirectoryInfo(Settings.UserProfile));
             Directory.Delete(Settings.UserProfile, true);
         }
 
         base.Dispose();
+    }
+
+    private void SetAttributes(DirectoryInfo directory)
+    {   
+        foreach (var subDirectory in directory.GetDirectories())
+        {
+            SetAttributes(subDirectory);
+        }
+
+        foreach (var file in directory.GetFiles())
+        {
+            file.Attributes = FileAttributes.Normal;
+        }
     }
 }
