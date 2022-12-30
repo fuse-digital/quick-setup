@@ -12,7 +12,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\src\FuseDigital.QuickSetup.Yaml\FuseDigital.QuickSetup.Yaml.csproj" />
+        <ProjectReference Include="..\..\src\FuseDigital.QuickSetup.Infrastructure\FuseDigital.QuickSetup.Infrastructure.csproj" />
         <ProjectReference Include="..\FuseDigital.QuickSetup.TestBase\FuseDigital.QuickSetup.TestBase.csproj" />
     </ItemGroup>
 

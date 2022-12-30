@@ -13,7 +13,7 @@ using Xunit;
 
 namespace FuseDigital.QuickSetup.Yaml;
 
-public class EntityRepositoryTests : QuickSetupYamlTestBase
+public class EntityRepositoryTests : QuickSetupInfrastructureTestBase
 {
     private class SampleEntity : Entity
     {
@@ -261,21 +261,6 @@ public class EntityRepositoryTests : QuickSetupYamlTestBase
 
         // Assert
         output.Count.ShouldBe(3);
-    }
-
-    private async Task CopyFileAsync(string source, string destination)
-    {
-        var content = GetFileContents(source);
-        if (content != null)
-        {
-            var directoryFullName = new FileInfo(destination).Directory?.FullName;
-            if (directoryFullName != null)
-            {
-                Directory.CreateDirectory(directoryFullName);
-            }
-
-            await File.WriteAllTextAsync(destination, content);
-        }
     }
 
     private SampleEntity GetSampleEntity()

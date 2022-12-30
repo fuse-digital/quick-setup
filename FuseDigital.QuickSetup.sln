@@ -19,9 +19,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FuseDigital.QuickSetup.Appl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FuseDigital.QuickSetup.Cli", "src\FuseDigital.QuickSetup.Cli\FuseDigital.QuickSetup.Cli.csproj", "{861CD39F-7241-4171-BC34-11F243556AEF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FuseDigital.QuickSetup.Yaml", "src\FuseDigital.QuickSetup.Yaml\FuseDigital.QuickSetup.Yaml.csproj", "{67A92CCA-615E-4D85-B6D9-DCAA38DF7E4C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FuseDigital.QuickSetup.Infrastructure", "src\FuseDigital.QuickSetup.Infrastructure\FuseDigital.QuickSetup.Infrastructure.csproj", "{67A92CCA-615E-4D85-B6D9-DCAA38DF7E4C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FuseDigital.QuickSetup.Yaml.Tests", "test\FuseDigital.QuickSetup.Yaml.Tests\FuseDigital.QuickSetup.Yaml.Tests.csproj", "{B512EA94-75E4-4B59-8BA8-813AD0FC6060}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FuseDigital.QuickSetup.Infrastructure.Tests", "test\FuseDigital.QuickSetup.Infrastructure.Tests\FuseDigital.QuickSetup.Infrastructure.Tests.csproj", "{B512EA94-75E4-4B59-8BA8-813AD0FC6060}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
