@@ -69,6 +69,11 @@ public class VersionControlDomainService : DomainService, IVersionControlDomainS
         return RunGitCommand(new[] { "add", pathSpec }, args);
     }
 
+    public IEnumerable<string> AddAll(IEnumerable<string> args = default)
+    {
+        return Add(".", args);
+    }
+
     public IEnumerable<string> Status(IEnumerable<string> args = default)
     {
         return RunGitCommand(new[] { "status" }, args);
@@ -109,6 +114,27 @@ public class VersionControlDomainService : DomainService, IVersionControlDomainS
     {
         Check.NotNullOrEmpty(branch, nameof(branch));
         return RunGitCommand(new[] { "checkout", "-t", $"origin/{branch}", "-f" });
+    }
+
+    public IEnumerable<string> Push(IEnumerable<string> args = default)
+    {
+        return RunGitCommand(new[] { "push" }, args);
+    }
+
+    public IEnumerable<string> PullAndRebase(IEnumerable<string> args = default)
+    {
+        return RunGitCommand(new[] { "pull", "--rebase" }, args);
+    }
+
+    public IEnumerable<string> GetStagedFiles(IEnumerable<string> args = default)
+    {
+        return RunGitCommand(new[] { "diff", "--name-only", "--cached" }, args);
+    }
+
+    public IEnumerable<string> ForceAdd(string pathSpec, IEnumerable<string> args = default)
+    {
+        Check.NotNullOrEmpty(pathSpec, nameof(pathSpec));
+        return RunGitCommand(new[] { "add", "-f", pathSpec }, args);
     }
 
     private IEnumerable<string> RunGitCommand(IEnumerable<string> command, IEnumerable<string> args = default)
