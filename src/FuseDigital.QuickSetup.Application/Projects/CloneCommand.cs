@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using FuseDigital.QuickSetup.Projects.Dto;
 using FuseDigital.QuickSetup.VersionControlSystems;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -24,7 +25,7 @@ public class CloneCommand : QupCommandAsync, ITransientDependency
 
     public override async Task ExecuteAsync(IQupCommandOptions options)
     {
-        var cloneOptions = (CloneOptions)options;
+        var cloneOptions = (CloneOptions) options;
         var project = new Project
         {
             Repository = cloneOptions.Repository,

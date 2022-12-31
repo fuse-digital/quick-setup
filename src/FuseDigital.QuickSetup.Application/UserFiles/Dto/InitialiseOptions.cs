@@ -1,7 +1,7 @@
 using System;
 using CommandLine;
 
-namespace FuseDigital.QuickSetup.UserFiles;
+namespace FuseDigital.QuickSetup.UserFiles.Dto;
 
 [Verb("init", HelpText = "Initializes a new local git repository and pushes it to a remote repository.")]
 public class InitialiseOptions : IQupCommandOptions

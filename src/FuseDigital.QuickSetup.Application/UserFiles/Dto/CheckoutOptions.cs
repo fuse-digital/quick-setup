@@ -1,7 +1,7 @@
 ﻿using System;
 using CommandLine;
 
-namespace FuseDigital.QuickSetup.UserFiles;
+namespace FuseDigital.QuickSetup.UserFiles.Dto;
 
 [Verb("checkout",HelpText = "Clones an existing QUP remote repository and checks out the specified branch as a local repository.")]
 public class CheckoutOptions : IQupCommandOptions

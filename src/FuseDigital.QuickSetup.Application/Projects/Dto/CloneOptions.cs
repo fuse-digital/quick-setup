@@ -1,7 +1,7 @@
 using System;
 using CommandLine;
 
-namespace FuseDigital.QuickSetup.Projects;
+namespace FuseDigital.QuickSetup.Projects.Dto;
 
 [Verb("clone", HelpText = "The clone command allows you to download a copy of a Git source repository to your local machine. It automatically saves the repository information and sets up synchronization, so that you can easily work with the repository across multiple machines.")]
 public class CloneOptions : IQupCommandOptions
