@@ -18,7 +18,8 @@ public class UserFileCheckoutTests : QuickSetupDomainTestBase
         Directory.CreateDirectory(Settings.UserProfile);
         var versionControl = A.Fake<IVersionControlDomainService>();
         A.CallTo(() => versionControl.RepositoryDirectory).Returns(".git");
-        var domainService = new UserFileDomainService(Options, versionControl);
+        var repository = A.Fake<IUserFileRepository>();
+        var domainService = new UserFileDomainService(Options, repository, versionControl);
 
         // Act
         await domainService.CheckoutAsync(remoteUrl, branch);
@@ -39,7 +40,8 @@ public class UserFileCheckoutTests : QuickSetupDomainTestBase
         Directory.CreateDirectory(Path.Combine(Settings.UserProfile, ".fake"));
         var versionControl = A.Fake<IVersionControlDomainService>();
         A.CallTo(() => versionControl.RepositoryDirectory).Returns(".fake");
-        var domainService = new UserFileDomainService(Options, versionControl);
+        var repository = A.Fake<IUserFileRepository>();
+        var domainService = new UserFileDomainService(Options, repository, versionControl);
 
         // Act
         var exception = await Should.ThrowAsync<RepositoryAlreadyExistsException>(async () =>
