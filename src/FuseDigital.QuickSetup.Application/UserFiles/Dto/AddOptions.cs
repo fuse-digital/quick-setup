@@ -1,0 +1,16 @@
+using System;
+using CommandLine;
+
+namespace FuseDigital.QuickSetup.UserFiles.Dto;
+
+[Verb("add", HelpText = "Adds a file or folder pattern to be included, tracked, and pushed to the remote repository.")]
+public class AddOptions: IQupCommandOptions
+{
+    [Value(0, Required = true, HelpText = "The file/folder pattern to be included.")]
+    public string Pattern { get; set; }
+
+    public Type GetCommandType()
+    {
+        return typeof(AddCommand);
+    }
+}

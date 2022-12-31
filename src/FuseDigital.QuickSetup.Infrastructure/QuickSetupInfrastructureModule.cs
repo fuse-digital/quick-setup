@@ -8,7 +8,7 @@ namespace FuseDigital.QuickSetup;
 [DependsOn(
     typeof(QuickSetupDomainModule)
 )]
-public class QuickSetupYamlModule : AbpModule
+public class QuickSetupInfrastructureModule : AbpModule
 {
     public override void ConfigureServices(ServiceConfigurationContext context)
     {

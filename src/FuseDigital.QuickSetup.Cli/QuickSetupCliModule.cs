@@ -8,7 +8,7 @@ namespace FuseDigital.QuickSetup.Cli;
 
 [DependsOn(
     typeof(QuickSetupApplicationModule),
-    typeof(QuickSetupYamlModule),
+    typeof(QuickSetupInfrastructureModule),
     typeof(AbpAutofacModule)
 )]
 public class QuickSetupCliModule : AbpModule

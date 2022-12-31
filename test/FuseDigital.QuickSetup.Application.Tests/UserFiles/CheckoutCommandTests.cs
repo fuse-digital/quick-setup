@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using FakeItEasy;
+using FuseDigital.QuickSetup.UserFiles.Dto;
 using Volo.Abp.DependencyInjection;
 using Xunit;
 

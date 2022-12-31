@@ -1,3 +1,4 @@
+using FuseDigital.QuickSetup.Entities;
 using FuseDigital.QuickSetup.VersionControlSystems;
 using Microsoft.Extensions.Options;
 using Volo.Abp;
@@ -7,12 +8,16 @@ namespace FuseDigital.QuickSetup.UserFiles;
 
 public class UserFileDomainService : DomainService, IUserFileDomainService
 {
+    private readonly IUserFileRepository _repository;
     private readonly IVersionControlDomainService _versionControl;
     private readonly QuickSetupOptions _options;
 
-    public UserFileDomainService(IOptions<QuickSetupOptions> options, IVersionControlDomainService versionControl)
+    public UserFileDomainService(IOptions<QuickSetupOptions> options,
+        IUserFileRepository repository,
+        IVersionControlDomainService versionControl)
     {
         _options = options.Value;
+        _repository = repository;
         _versionControl = versionControl;
         _versionControl.WorkingDirectory = _options.UserProfile;
     }
@@ -25,8 +30,8 @@ public class UserFileDomainService : DomainService, IUserFileDomainService
 
     public async Task InitialiseAsync(string sourceUrl, string defaultBranch)
     {
-        Check.NotNull(sourceUrl, nameof(sourceUrl));
-        Check.NotNull(defaultBranch, nameof(defaultBranch));
+        Check.NotNullOrEmpty(sourceUrl, nameof(sourceUrl));
+        Check.NotNullOrEmpty(defaultBranch, nameof(defaultBranch));
 
         if (Exists())
         {
@@ -45,8 +50,8 @@ public class UserFileDomainService : DomainService, IUserFileDomainService
 
     public Task CheckoutAsync(string sourceUrl, string branch)
     {
-        Check.NotNull(sourceUrl, nameof(sourceUrl));
-        Check.NotNull(branch, nameof(branch));
+        Check.NotNullOrEmpty(sourceUrl, nameof(sourceUrl));
+        Check.NotNullOrEmpty(branch, nameof(branch));
 
         if (Exists())
         {
@@ -59,6 +64,26 @@ public class UserFileDomainService : DomainService, IUserFileDomainService
         _versionControl.Checkout(branch);
 
         return Task.CompletedTask;
+    }
+
+    public async Task<bool> PatternExistsAsync(string pattern)
+    {
+        Check.NotNullOrEmpty(pattern, nameof(pattern));
+        
+        var entry = await _repository.FindAsync(x => x.Equals(pattern));
+        return !string.IsNullOrEmpty(entry);
+    }
+
+    public async Task AddAsync(string pattern)
+    {
+        Check.NotNullOrEmpty(pattern, nameof(pattern));
+
+        if (await PatternExistsAsync(pattern))
+        {
+            throw new EntityAlreadyExistsException(typeof(string), pattern);
+        }
+
+        await _repository.InsertAsync(pattern);
     }
 
     private async Task CreateIgnoreFile()

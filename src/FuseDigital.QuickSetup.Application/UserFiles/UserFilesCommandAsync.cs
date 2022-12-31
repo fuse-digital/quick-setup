@@ -6,7 +6,7 @@ namespace FuseDigital.QuickSetup.UserFiles;
 
 public abstract class UserFilesCommandAsync : QupCommandAsync
 {
-    private QuickSetupOptions Settings { get; }
+    protected QuickSetupOptions Settings { get; }
     protected IUserFileDomainService UserFileService { get; }
 
     protected UserFilesCommandAsync(IOptions<QuickSetupOptions> options, IUserFileDomainService userFileServiceDomainService)

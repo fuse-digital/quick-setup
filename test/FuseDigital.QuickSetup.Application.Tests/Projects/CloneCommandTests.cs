@@ -2,6 +2,7 @@
 using System.IO;
 using System.Threading.Tasks;
 using FakeItEasy;
+using FuseDigital.QuickSetup.Projects.Dto;
 using FuseDigital.QuickSetup.Repositories;
 using FuseDigital.QuickSetup.VersionControlSystems;
 using FuseDigital.QuickSetup.Yaml;

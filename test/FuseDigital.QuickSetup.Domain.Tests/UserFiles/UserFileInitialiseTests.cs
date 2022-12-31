@@ -18,7 +18,8 @@ public class UserFileInitialiseTests : QuickSetupDomainTestBase
         Directory.CreateDirectory(Settings.UserProfile);
         var versionControl = A.Fake<IVersionControlDomainService>();
         A.CallTo(() => versionControl.RepositoryDirectory).Returns(".git");
-        var domainService = new UserFileDomainService(Options, versionControl);
+        var repository = A.Fake<IUserFileRepository>();
+        var domainService = new UserFileDomainService(Options, repository, versionControl);
 
         // Act
         await domainService.InitialiseAsync(remoteUrl, defaultBranch);
@@ -40,8 +41,9 @@ public class UserFileInitialiseTests : QuickSetupDomainTestBase
         var remoteUrl = Settings.GetAbsolutePath($"~/server/dot-files.fake");
         Directory.CreateDirectory(Path.Combine(Settings.UserProfile, ".fake"));
         var versionControl = A.Fake<IVersionControlDomainService>();
+        var repository = A.Fake<IUserFileRepository>();
         A.CallTo(() => versionControl.RepositoryDirectory).Returns(".fake");
-        var domainService = new UserFileDomainService(Options, versionControl);
+        var domainService = new UserFileDomainService(Options, repository, versionControl);
 
         // Act
         var exception = await Should.ThrowAsync<RepositoryAlreadyExistsException>(async () =>

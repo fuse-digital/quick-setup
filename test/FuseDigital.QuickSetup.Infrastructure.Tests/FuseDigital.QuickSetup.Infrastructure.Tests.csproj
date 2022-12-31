@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <Import Project="..\..\common.props"/>
+
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <RootNamespace>FuseDigital.QuickSetup</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.4.1"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\src\FuseDigital.QuickSetup.Infrastructure\FuseDigital.QuickSetup.Infrastructure.csproj"/>
+        <ProjectReference Include="..\FuseDigital.QuickSetup.TestBase\FuseDigital.QuickSetup.TestBase.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <EmbeddedResource Include="Text\.sample-list"/>
+        <EmbeddedResource Include="Text\.sample-unordered-list"/>
+        <EmbeddedResource Include="Yaml\sample-unordered-list.yml"/>
+        <EmbeddedResource Include="Yaml\sample-list.yml"/>
+    </ItemGroup>
+
+</Project>

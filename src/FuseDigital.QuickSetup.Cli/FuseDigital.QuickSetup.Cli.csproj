@@ -39,7 +39,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\FuseDigital.QuickSetup.Application\FuseDigital.QuickSetup.Application.csproj"/>
-        <ProjectReference Include="..\FuseDigital.QuickSetup.Yaml\FuseDigital.QuickSetup.Yaml.csproj"/>
+        <ProjectReference Include="..\FuseDigital.QuickSetup.Infrastructure\FuseDigital.QuickSetup.Infrastructure.csproj"/>
     </ItemGroup>
     
     <ItemGroup>
