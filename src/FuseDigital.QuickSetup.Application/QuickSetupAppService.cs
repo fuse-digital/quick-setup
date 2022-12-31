@@ -36,9 +36,9 @@ public class QuickSetupAppService : ApplicationService
     {
         var helpText = HelpText.AutoBuild(result, h =>
         {
-            h.AdditionalNewLineAfterOption = false;
-            h.Heading = "QUP 0.1-beta";
-            h.Copyright = $"Copyright (c) {DateTime.Now.Year} Fuse Digital (PTY) Limited";
+            h.AdditionalNewLineAfterOption = true;
+            h.Heading = "QuickSetup (QUP)";
+            h.Copyright = $"Copyright (c) {DateTime.Now.Year} by Fuse Digital (PTY) Limited";
             return HelpText.DefaultParsingErrorsHandler(result, h);
         }, e => e);
         Console.WriteLine(helpText);
