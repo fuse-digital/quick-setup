@@ -208,6 +208,9 @@ public sealed class VersionControlSystemTests : QuickSetupDomainTestBase
         _versionControlSystem.Init(RemoteUrl, new[] {"--bare", "-b", BranchName});
         _versionControlSystem.Clone(RemoteUrl, RepoRelativePath);
         _versionControlSystem.WorkingDirectory = RepoWorkingDirectory;
+        _versionControlSystem.SetConfig("user.email", "john@doe.com");
+        _versionControlSystem.SetConfig("user.name", "john@doe.com");
+
         await CreateFileAsync(Filename);
         _versionControlSystem.AddAll();
         _versionControlSystem.Commit();
@@ -231,6 +234,9 @@ public sealed class VersionControlSystemTests : QuickSetupDomainTestBase
 
         _versionControlSystem.Clone(RemoteUrl, SecondRepoRelativePath);
         _versionControlSystem.WorkingDirectory = SecondRepoWorkingDirectory;
+        _versionControlSystem.SetConfig("user.email", "john@doe.com");
+        _versionControlSystem.SetConfig("user.name", "john@doe.com");
+
         await CreateFileAsync($"Second-{Filename}", SecondRepoWorkingDirectory);
         _versionControlSystem.AddAll();
         _versionControlSystem.Commit();

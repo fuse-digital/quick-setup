@@ -13,4 +13,6 @@ public interface IUserFileDomainService : IDomainService
     Task<bool> PatternExistsAsync(string pattern);
 
     Task AddAsync(string pattern);
+
+    Task SynchroniseAsync();
 }

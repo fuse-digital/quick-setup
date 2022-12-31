@@ -21,4 +21,11 @@ public abstract class UserFilesCommandAsync : QupCommandAsync
         Logger.LogInformation(message, Settings.UserProfile);
         Console.WriteLine(message, Settings.UserProfile);
     }
+    
+    protected void DisplayRepositoryNotFound()
+    {
+        const string message = "The local repository does not exists. Please run the `qup init` to create or `qup checkout` to clone an existing remote repository";
+        Logger.LogInformation(message);
+        Console.WriteLine(message);
+    }
 }

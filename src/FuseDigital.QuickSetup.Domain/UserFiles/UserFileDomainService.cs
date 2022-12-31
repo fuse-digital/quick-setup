@@ -41,7 +41,7 @@ public class UserFileDomainService : DomainService, IUserFileDomainService
         _versionControl.Init(_options.UserProfile);
         await CreateIgnoreFile();
         await CreateIncludeFile();
-        _versionControl.Add(".");
+        _versionControl.AddAll();
         _versionControl.Commit();
         _versionControl.RenameBranch(defaultBranch);
         _versionControl.AddRemote(sourceUrl);
@@ -69,7 +69,7 @@ public class UserFileDomainService : DomainService, IUserFileDomainService
     public async Task<bool> PatternExistsAsync(string pattern)
     {
         Check.NotNullOrEmpty(pattern, nameof(pattern));
-        
+
         var entry = await _repository.FindAsync(x => x.Equals(pattern));
         return !string.IsNullOrEmpty(entry);
     }
@@ -84,6 +84,34 @@ public class UserFileDomainService : DomainService, IUserFileDomainService
         }
 
         await _repository.InsertAsync(pattern);
+    }
+
+    public async Task SynchroniseAsync()
+    {
+        if (!Exists())
+        {
+            throw new RepositoryNotFoundException(_options.UserProfile);
+        }
+
+        await StageUserFiles();
+        var files = _versionControl.GetStagedFiles();
+        if (files.Any())
+        {
+            _versionControl.Commit();
+        }
+
+        _versionControl.PullAndRebase();
+        _versionControl.Push();
+    }
+
+    private async Task StageUserFiles()
+    {
+        var items = await _repository.GetListAsync();
+        foreach (var item in items)
+        {
+            _versionControl.ForceAdd(item);
+        }
+        _versionControl.AddAll();
     }
 
     private async Task CreateIgnoreFile()
