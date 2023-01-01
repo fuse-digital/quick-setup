@@ -28,7 +28,7 @@ public class VersionControlDomainService : DomainService, IVersionControlDomainS
         return RunGitCommand(new[] { "clone", sourceUrl, workingDirectory });
     }
 
-    public IEnumerable<string> Init(string workingDirectory, 
+    public IEnumerable<string> Init(string workingDirectory,
         IEnumerable<string> args = default,
         bool changeWorkingDirectory = false)
     {
@@ -140,14 +140,19 @@ public class VersionControlDomainService : DomainService, IVersionControlDomainS
     private IEnumerable<string> RunGitCommand(IEnumerable<string> command, IEnumerable<string> args = default)
     {
         var arguments = command.Concat(args ?? new List<string>());
-        Logger.LogInformation("Execute {Command} with {Arguments}", nameof(RunGitCommand), arguments);
+        Logger.LogDebug("Executing {Command} from {WorkingDirectory}", nameof(RunGitCommand), WorkingDirectory);
+        Logger.LogDebug("Git {GitCommand}", arguments);
 
         var startInfo = GitCommand(arguments);
         var process = Process.Start(startInfo);
-        var output = process?.StandardOutput.ReadToEnd();
+        var processOutput = process?.StandardOutput.ReadToEnd();
         process?.WaitForExit();
 
-        return output?.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries) ?? Array.Empty<string>();
+        var output = processOutput?.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries)
+                     ?? Array.Empty<string>();
+
+        Logger.LogDebug("Output {Output}", output.ToList());
+        return output;
     }
 
     private ProcessStartInfo GitCommand(IEnumerable<string> args)

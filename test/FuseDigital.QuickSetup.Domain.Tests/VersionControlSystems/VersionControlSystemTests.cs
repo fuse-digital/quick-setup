@@ -18,7 +18,7 @@ public sealed class VersionControlSystemTests : QuickSetupDomainTestBase
     private string RepoWorkingDirectory { get; }
     private string SecondRepoWorkingDirectory { get; }
     private string RemoteUrl { get; }
-
+    
     public VersionControlSystemTests()
     {
         _versionControlSystem = new VersionControlDomainService(Options)
@@ -34,6 +34,7 @@ public sealed class VersionControlSystemTests : QuickSetupDomainTestBase
     public void Clone_Should_Create_Repository_In_Working_Directory()
     {
         // Arrange
+        LogDebug();
         _versionControlSystem.Init(RemoteUrl, new[] {"--bare", "-b", BranchName});
 
         // Act
@@ -47,6 +48,7 @@ public sealed class VersionControlSystemTests : QuickSetupDomainTestBase
     public async Task Fetch_Should_Retrieve_Metadata_From_Remote_Repository()
     {
         // Arrange
+        LogDebug();
         await PushSetUpstream_Should_Set_The_Tracking_Branch_And_Push_Changes();
         _versionControlSystem.Init(SecondRepoWorkingDirectory, changeWorkingDirectory: true);
         _versionControlSystem.AddRemote(RemoteUrl);
@@ -62,6 +64,7 @@ public sealed class VersionControlSystemTests : QuickSetupDomainTestBase
     public async Task Checkout_Should_Retrieve_Files_From_Remote_Repository()
     {
         // Arrange
+        LogDebug();
         await Fetch_Should_Retrieve_Metadata_From_Remote_Repository();
 
         // Act
@@ -75,6 +78,7 @@ public sealed class VersionControlSystemTests : QuickSetupDomainTestBase
     public void Init_Should_Create_Repository_In_Working_Directory()
     {
         // Act
+        LogDebug();
         _versionControlSystem.Init(RepoWorkingDirectory);
 
         // Assert
@@ -85,6 +89,7 @@ public sealed class VersionControlSystemTests : QuickSetupDomainTestBase
     public async Task Add_Should_Stage_Files_That_Changed_Are_Not_In_The_Ignore_File()
     {
         // Arrange
+        LogDebug();
         _versionControlSystem.Init(RepoWorkingDirectory, changeWorkingDirectory: true);
         await File.WriteAllTextAsync(Path.Combine(RepoWorkingDirectory, Filename), "# qup-empty-dotfiles");
 
@@ -104,6 +109,7 @@ public sealed class VersionControlSystemTests : QuickSetupDomainTestBase
     public async Task Commit_Should_Save_All_Staged_Files()
     {
         // Arrange
+        LogDebug();
         await Add_Should_Stage_Files_That_Changed_Are_Not_In_The_Ignore_File();
         _versionControlSystem.SetConfig("user.email", "john@doe.com");
         _versionControlSystem.SetConfig("user.name", "john@doe.com");
@@ -121,6 +127,7 @@ public sealed class VersionControlSystemTests : QuickSetupDomainTestBase
     public async Task RenameBranch_Should_Change_The_Name_Of_The_Current_Branch()
     {
         // Arrange
+        LogDebug();
         await Commit_Should_Save_All_Staged_Files();
 
         // Act
@@ -137,6 +144,7 @@ public sealed class VersionControlSystemTests : QuickSetupDomainTestBase
     public async Task PushSetUpstream_Should_Set_The_Tracking_Branch_And_Push_Changes()
     {
         // Arrange
+        LogDebug();
         _versionControlSystem.Init(RemoteUrl, new[] {"--bare", "-b", BranchName});
         await RenameBranch_Should_Change_The_Name_Of_The_Current_Branch();
 
@@ -154,6 +162,8 @@ public sealed class VersionControlSystemTests : QuickSetupDomainTestBase
     public async Task AddAll_Should_Stage_All_The_Files_That_Changed_And_Are_Not_In_The_Ignore_File()
     {
         // Arrange
+        LogDebug();
+
         _versionControlSystem.Init(RepoWorkingDirectory, changeWorkingDirectory: true);
         await CreateFileAsync(Filename);
         await CreateFileAsync($"Second-{Filename}");
@@ -174,6 +184,7 @@ public sealed class VersionControlSystemTests : QuickSetupDomainTestBase
     public async Task GetStagedFiles_Should_Return_A_List_Of_All_Files_That_Have_Been_Staged()
     {
         // Arrange
+        LogDebug();
         await AddAll_Should_Stage_All_The_Files_That_Changed_And_Are_Not_In_The_Ignore_File();
 
         // Act
@@ -188,6 +199,7 @@ public sealed class VersionControlSystemTests : QuickSetupDomainTestBase
     public async Task ForceAdd_Should_Add_Changed_Files_Even_If_They_Are_In_The_Ignore_Config()
     {
         // Arrange
+        LogDebug();
         _versionControlSystem.Init(RepoWorkingDirectory, changeWorkingDirectory: true);
         await File.WriteAllTextAsync(Path.Combine(RepoWorkingDirectory, ".gitignore"), $"{Filename}");
         await CreateFileAsync(Filename);
@@ -205,6 +217,7 @@ public sealed class VersionControlSystemTests : QuickSetupDomainTestBase
     public async Task Push_Should_Upload_The_Committed_Changes_To_The_Remote_Repository()
     {
         // Arrange
+        LogDebug();
         _versionControlSystem.Init(RemoteUrl, new[] {"--bare", "-b", BranchName});
         _versionControlSystem.Clone(RemoteUrl, RepoRelativePath);
         _versionControlSystem.WorkingDirectory = RepoWorkingDirectory;
@@ -230,6 +243,7 @@ public sealed class VersionControlSystemTests : QuickSetupDomainTestBase
     public async Task PullAndRebase_Should_Pull_Remote_Changes_And_Rebase_Local_Repository()
     {
         // Arrange
+        LogDebug();
         await Push_Should_Upload_The_Committed_Changes_To_The_Remote_Repository();
 
         _versionControlSystem.Clone(RemoteUrl, SecondRepoRelativePath);
