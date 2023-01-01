@@ -10,9 +10,9 @@ using Volo.Abp.Domain.Entities;
 
 namespace FuseDigital.QuickSetup.Text;
 
-public class TextRepository : ITextRepository
+public abstract class TextRepository : ITextRepository
 {
-    public virtual string FileName { get; }
+    public abstract string FileName { get; }
 
     public virtual string FilePath => Path.Combine(Context.Options.UserProfile, Context.Options.BaseDirectory, FileName);
 
