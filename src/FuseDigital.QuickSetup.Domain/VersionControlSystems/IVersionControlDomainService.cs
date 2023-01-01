@@ -10,11 +10,15 @@ public interface IVersionControlDomainService : IDomainService
 
     IEnumerable<string> Clone(string sourceUrl, string relativePath);
 
-    IEnumerable<string> Init(string workingDirectory, 
+    IEnumerable<string> Init(string workingDirectory,
         IEnumerable<string> args = default,
         bool changeWorkingDirectory = false);
 
     IEnumerable<string> Add(string pathSpec, IEnumerable<string> args = default);
+
+    IEnumerable<string> AddAll(IEnumerable<string> args = default);
+
+    IEnumerable<string> ForceAdd(string pathSpec, IEnumerable<string> args = default);
 
     IEnumerable<string> SetConfig(string key, string value, bool global = false);
 
@@ -31,4 +35,11 @@ public interface IVersionControlDomainService : IDomainService
     IEnumerable<string> Fetch(IEnumerable<string> args = default);
 
     IEnumerable<string> Checkout(string branch, IEnumerable<string> args = default);
+
+    IEnumerable<string> Push(IEnumerable<string> args = default);
+
+    IEnumerable<string> PullAndRebase(IEnumerable<string> args = default);
+
+    IEnumerable<string> GetStagedFiles(IEnumerable<string> args = default);
+
 }

@@ -26,7 +26,7 @@ public class UserFileInitialiseTests : QuickSetupDomainTestBase
 
         // Assert
         A.CallTo(() => versionControl.Init(Settings.UserProfile, default, default)).MustHaveHappened();
-        A.CallTo(() => versionControl.Add(".", default)).MustHaveHappened();
+        A.CallTo(() => versionControl.AddAll(default)).MustHaveHappened();
         A.CallTo(() => versionControl.Commit(default, default)).MustHaveHappened();
         A.CallTo(() => versionControl.RenameBranch(defaultBranch, default)).MustHaveHappened();
         A.CallTo(() => versionControl.AddRemote(remoteUrl, default)).MustHaveHappened();
@@ -54,7 +54,7 @@ public class UserFileInitialiseTests : QuickSetupDomainTestBase
         // Assert
         exception.ShouldNotBeNull();
         exception.Message.ShouldBe(Settings.UserProfile);
-        
+
         A.CallTo(() => versionControl.Init(Settings.UserProfile, default, default)).MustNotHaveHappened();
         A.CallTo(() => versionControl.Add(".", default)).MustNotHaveHappened();
         A.CallTo(() => versionControl.Commit(default, default)).MustNotHaveHappened();
