@@ -9,6 +9,7 @@ using Shouldly;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Domain.Entities;
 using Volo.Abp.Domain.Repositories;
+using Volo.Abp.Validation;
 using Xunit;
 
 namespace FuseDigital.QuickSetup.Yaml;
@@ -17,8 +18,11 @@ public class EntityRepositoryTests : QuickSetupInfrastructureTestBase
 {
     private class SampleEntity : Entity
     {
-        [Key] public string SampleKey { get; set; }
+        [Key]
+        [RegularExpression(@"^[a-zA-Z0-9_-]+$")]
+        public string SampleKey { get; set; }
 
+        [Required]
         public string SampleValue { get; set; }
 
         public IList<string> SampleList { get; set; }
@@ -63,6 +67,28 @@ public class EntityRepositoryTests : QuickSetupInfrastructureTestBase
         // Assert
         var path = Path.Combine(context.Options.UserProfile, context.Options.BaseDirectory, "sample.yml");
         repository.FilePath.ShouldBe(path);
+    }
+    
+    [Fact]
+    public async Task InsertAsync_Should_Validate_Entity_Model_Before_Inserting_Entity()
+    {
+        // Arrange
+        var repository = GetSampleRepository();
+        var input = new SampleEntity
+        {
+            SampleKey = "this value is not allowed by the regular expression",
+            SampleValue = null,
+            SampleList = null
+        };
+        
+        // Act
+        var exception = await Should.ThrowAsync<AbpValidationException>(async () =>
+        {
+            await repository.InsertAsync(input);
+        });
+
+        exception.ValidationErrors.ShouldNotBeNull();
+        exception.ValidationErrors.Count.ShouldBe(2);
     }
 
     [Fact]
@@ -145,6 +171,7 @@ public class EntityRepositoryTests : QuickSetupInfrastructureTestBase
         await CopyFileAsync("sample-list.yml", repository.FilePath);
         var input = GetSampleEntity();
         input.SampleKey = "SampleKey08";
+        input.SampleValue = "Sample value";
 
         // Act
         var output = await repository.UpdateAsync(input);
@@ -152,6 +179,27 @@ public class EntityRepositoryTests : QuickSetupInfrastructureTestBase
         // Assert
         output.ShouldNotBeNull();
         output.SampleKey.ShouldBe(input.SampleKey);
+        output.SampleValue.ShouldBe(input.SampleValue);
+    }
+    
+    [Fact]
+    public async Task UpdateAsync_Should_Validate_Model_Before_Updating()
+    {
+        // Arrange
+        var repository = GetSampleRepository();
+        await CopyFileAsync("sample-list.yml", repository.FilePath);
+        var input = GetSampleEntity();
+        input.SampleKey = "SampleKey08";
+        input.SampleValue = null;
+        
+        // Act
+        var exception = await Should.ThrowAsync<AbpValidationException>(async () =>
+        {
+            await repository.UpdateAsync(input);
+        });
+
+        exception.ValidationErrors.ShouldNotBeNull();
+        exception.ValidationErrors.Count.ShouldBe(1);
     }
 
     [Fact]
