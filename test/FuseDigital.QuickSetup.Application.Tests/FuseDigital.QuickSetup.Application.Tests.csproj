@@ -17,6 +17,7 @@
   </ItemGroup>
   
   <ItemGroup>
+    <EmbeddedResource Include="PackageManagers\packages.yml" />
     <EmbeddedResource Include="Projects\project-exists.yml" />
   </ItemGroup>
 

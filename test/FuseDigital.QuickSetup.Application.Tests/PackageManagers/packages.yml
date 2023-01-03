@@ -1,0 +1,27 @@
+﻿- name: package-manager-1
+  runs-on:
+    - Linux
+    - macOS
+    - Windows
+  description: A description for package manager 1
+  pre-install: package-manager-1 update
+  install: package-manager1 install -y
+  post-install: package-manager1 --prune
+  update: package-manager1 upgrade
+  packages:
+    - package01-01
+    - package01-02
+
+- name: package-manager-2
+  runs-on:
+    - Linux
+    - macOS
+    - Windows
+  description: A description for package manager 2
+  pre-install: package-manager-2 update
+  install: package-manager2 install -y
+  post-install: package-manager2 --prune
+  update: package-manager2 upgrade
+  packages:
+    - package02-01
+    - package02-02
