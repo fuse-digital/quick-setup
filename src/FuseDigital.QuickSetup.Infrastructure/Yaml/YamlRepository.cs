@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
@@ -8,13 +9,14 @@ using System.Threading.Tasks;
 using FuseDigital.QuickSetup.Entities;
 using Volo.Abp.Domain.Entities;
 using Volo.Abp.Domain.Repositories;
+using Volo.Abp.Validation;
 
 namespace FuseDigital.QuickSetup.Yaml;
 
 public class YamlRepository<TEntity> : RepositoryBase<TEntity>, IYamlRepository<TEntity>
     where TEntity : class, IEntity
 {
-    public string FileName => GetType().Name
+    public virtual string FileName => GetType().Name
         .Replace("Repository", ".yml", StringComparison.InvariantCultureIgnoreCase)
         .ToLower();
 
@@ -44,14 +46,27 @@ public class YamlRepository<TEntity> : RepositoryBase<TEntity>, IYamlRepository<
         var index = sortSelector != null
             ? entities.OrderBy(sortSelector).ToList()
             : entities;
-        
+
         await Context.SaveToFileAsync(index, FilePath, cancellationToken);
+    }
+
+    private void ValidateModel(TEntity entity)
+    {
+        var modelValidationContext = new ValidationContext(entity, serviceProvider: null, items: null);
+        var modelValidationResults = new List<ValidationResult>();
+        Validator.TryValidateObject(entity, modelValidationContext, modelValidationResults, true);
+
+        if (modelValidationResults.Count > 0)
+        {
+            throw new AbpValidationException("", modelValidationResults);
+        }
     }
 
     public override async Task<TEntity> InsertAsync(TEntity entity, bool autoSave = false,
         CancellationToken cancellationToken = default)
     {
         var dbSet = await GetDbSetAsync(cancellationToken);
+        ValidateModel(entity);
         if (EntityExists(dbSet, entity))
         {
             throw new EntityAlreadyExistsException(typeof(TEntity), entity.GetKeys());
@@ -72,6 +87,7 @@ public class YamlRepository<TEntity> : RepositoryBase<TEntity>, IYamlRepository<
         bool autoSave = false,
         CancellationToken cancellationToken = default)
     {
+        ValidateModel(entity);
         var dbSet = await GetDbSetAsync(cancellationToken);
         await RemoveAsync(entity, dbSet, cancellationToken);
         dbSet.Add(entity);
@@ -104,6 +120,13 @@ public class YamlRepository<TEntity> : RepositoryBase<TEntity>, IYamlRepository<
         CancellationToken cancellationToken = default)
     {
         return (await GetDbSetAsync(cancellationToken)).ToList();
+    }
+
+    public override async Task<List<TEntity>> GetListAsync(Expression<Func<TEntity, bool>> predicate,
+        bool includeDetails = false,
+        CancellationToken cancellationToken = default)
+    {
+        return (await GetQueryableAsync(cancellationToken)).Where(predicate).ToList();
     }
 
     public override async Task<long> GetCountAsync(CancellationToken cancellationToken = default)
@@ -158,13 +181,6 @@ public class YamlRepository<TEntity> : RepositoryBase<TEntity>, IYamlRepository<
             .ToList();
 
         await DeleteManyAsync(entities, autoSave, cancellationToken);
-    }
-
-    public override async Task<List<TEntity>> GetListAsync(Expression<Func<TEntity, bool>> predicate,
-        bool includeDetails = false,
-        CancellationToken cancellationToken = default)
-    {
-        return (await GetQueryableAsync(cancellationToken)).Where(predicate).ToList();
     }
 
     [Obsolete("Use GetQueryableAsync method.")]
