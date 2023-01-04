@@ -6,9 +6,11 @@ public class QuickSetupOptions
 
     public string BaseDirectory { get; set; } = ".qup";
 
-    public const char DirectorySeparatorChar = '/';
+    public string LogDirectory { get; set; } = "logs";
 
-    public const string UserProfileChar = "~";
+    private const char DirectorySeparatorChar = '/';
+
+    private const string UserProfileChar = "~";
 
     public string GetAbsolutePath(string path)
     {

@@ -22,6 +22,8 @@ public class InstallCommand : QupCommandAsync, ITransientDependency
 
     public override async Task ExecuteAsync(IQupCommandOptions options)
     {
+        await base.ExecuteAsync(options);
+
         var installOptions = (InstallOptions) options;
         var packageManager = installOptions.PackageManager;
         var package = (installOptions.Package ?? Array.Empty<string>())
