@@ -5,31 +5,50 @@ using System.Reflection;
 using System.Threading.Tasks;
 using CommandLine;
 using CommandLine.Text;
+using FuseDigital.QuickSetup.Logging;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Volo.Abp;
 using Volo.Abp.Application.Services;
+using Volo.Abp.Domain.Entities;
 
 namespace FuseDigital.QuickSetup;
 
 public class QuickSetupAppService : ApplicationService
 {
-    private QuickSetupOptions _options;
+    private QuickSetupOptions Settings { get; }
 
     public QuickSetupAppService(IOptions<QuickSetupOptions> options)
     {
-        _options = options.Value;
+        Settings = options.Value;
     }
 
     public async Task RunAsync(IEnumerable<string> args)
     {
         Logger.LogInformation("Quick Setup CLI (https://github.com/fuse-digital/quick-setup)");
-        Logger.LogInformation("User profile directory is set {UserProfile}", _options.UserProfile);
-        Logger.LogInformation("The base directory for QUP is set {BaseDirectory}", _options.BaseDirectory);
-        
-        var parser = new CommandLine.Parser(with => with.HelpWriter = null);
-        var parserResult = parser.ParseArguments(args, GetOptions());
-        await parserResult.WithParsedAsync<IQupCommandOptions>(RunCommandAsync);
-        await parserResult.WithNotParsedAsync(errors => DisplayHelpAsync(parserResult, errors));
+        Logger.LogDebug("User profile directory is set {UserProfile}", Settings.UserProfile);
+        Logger.LogDebug("The base directory for QUP is set {BaseDirectory}", Settings.BaseDirectory);
+
+        try
+        {
+            var parser = new CommandLine.Parser(with => with.HelpWriter = null);
+            var parserResult = parser.ParseArguments(args, GetOptions());
+            await parserResult.WithParsedAsync<IQupCommandOptions>(RunCommandAsync);
+            await parserResult.WithNotParsedAsync(errors => DisplayHelpAsync(parserResult, errors));
+        }
+        catch (EntityNotFoundException exception)
+        {
+            Logger.LogBusinessException(exception);
+        }
+        catch (BusinessException exception)
+        {
+            Logger.LogBusinessException(exception);
+        }
+        catch (Exception exception)
+        {
+            Logger.LogException(exception);
+            Logger.LogWithLevel(exception.GetLogLevel(), $"Please see the logs for more information.");
+        }
     }
 
     private Task DisplayHelpAsync<T>(ParserResult<T> result, IEnumerable<Error> errors)
