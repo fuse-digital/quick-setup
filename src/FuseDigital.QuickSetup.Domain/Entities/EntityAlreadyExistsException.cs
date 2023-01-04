@@ -1,10 +1,15 @@
+using Microsoft.Extensions.Logging;
 using Volo.Abp;
-using Volo.Abp.Domain.Entities;
 
 namespace FuseDigital.QuickSetup.Entities;
 
-public class EntityAlreadyExistsException : AbpException
+public class EntityAlreadyExistsException : BusinessException
 {
+    /// <summary>
+    /// Exceptions are logged with the Error level by default. The Log level can be determined by the exception.
+    /// </summary>
+    public LogLevel LogLevel { get; set; } = LogLevel.Warning;
+
     /// <summary>
     /// Type of the entity.
     /// </summary>
@@ -20,7 +25,6 @@ public class EntityAlreadyExistsException : AbpException
     /// </summary>
     public EntityAlreadyExistsException()
     {
-
     }
 
     /// <summary>
@@ -29,7 +33,6 @@ public class EntityAlreadyExistsException : AbpException
     public EntityAlreadyExistsException(Type entityType)
         : this(entityType, null, null)
     {
-
     }
 
     /// <summary>
@@ -38,41 +41,22 @@ public class EntityAlreadyExistsException : AbpException
     public EntityAlreadyExistsException(Type entityType, object id)
         : this(entityType, id, null)
     {
-
     }
 
     /// <summary>
     /// Creates a new <see cref="EntityAlreadyExistsException"/> object.
     /// </summary>
-    public EntityAlreadyExistsException(Type entityType, object id, Exception innerException)
+    private EntityAlreadyExistsException(Type entityType, object id, Exception innerException)
         : base(
+            "IDX001",
             id == null
                 ? $"An Entity with the given id already exists. Entity type: {entityType.FullName}"
                 : $"An Entity with the given id already exists. Entity type: {entityType.FullName}, id: {id}",
-            innerException)
+            null,
+            innerException
+        )
     {
         EntityType = entityType;
         Id = id;
-    }
-
-    /// <summary>
-    /// Creates a new <see cref="EntityAlreadyExistsException"/> object.
-    /// </summary>
-    /// <param name="message">Exception message</param>
-    public EntityAlreadyExistsException(string message)
-        : base(message)
-    {
-
-    }
-
-    /// <summary>
-    /// Creates a new <see cref="EntityAlreadyExistsException"/> object.
-    /// </summary>
-    /// <param name="message">Exception message</param>
-    /// <param name="innerException">Inner exception</param>
-    public EntityAlreadyExistsException(string message, Exception innerException)
-        : base(message, innerException)
-    {
-
     }
 }
