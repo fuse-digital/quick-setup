@@ -25,6 +25,8 @@ public class CloneCommand : QupCommandAsync, ITransientDependency
 
     public override async Task ExecuteAsync(IQupCommandOptions options)
     {
+        await base.ExecuteAsync(options);
+
         var cloneOptions = (CloneOptions) options;
         var project = new Project
         {

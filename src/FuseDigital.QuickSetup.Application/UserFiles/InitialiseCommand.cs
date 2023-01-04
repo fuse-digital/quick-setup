@@ -7,14 +7,16 @@ namespace FuseDigital.QuickSetup.UserFiles;
 
 public class InitialiseCommand : UserFilesCommandAsync, ITransientDependency
 {
-    public InitialiseCommand(IOptions<QuickSetupOptions> options, IUserFileDomainService userFileServiceDomainService) 
+    public InitialiseCommand(IOptions<QuickSetupOptions> options, IUserFileDomainService userFileServiceDomainService)
         : base(options, userFileServiceDomainService)
     {
     }
 
     public override async Task ExecuteAsync(IQupCommandOptions options)
     {
-        var init = (InitialiseOptions)options;
+        await base.ExecuteAsync(options);
+
+        var init = (InitialiseOptions) options;
         if (UserFileService.Exists())
         {
             DisplayRepositoryExists();

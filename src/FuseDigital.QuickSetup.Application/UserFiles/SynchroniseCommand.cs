@@ -15,6 +15,8 @@ public class SynchroniseCommand : UserFilesCommandAsync, ITransientDependency
 
     public override async Task ExecuteAsync(IQupCommandOptions options)
     {
+        await base.ExecuteAsync(options);
+
         if (!UserFileService.Exists())
         {
             DisplayRepositoryNotFound();

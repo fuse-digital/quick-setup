@@ -15,7 +15,9 @@ public class CheckoutCommand : UserFilesCommandAsync, ITransientDependency
 
     public override async Task ExecuteAsync(IQupCommandOptions options)
     {
-        var input = (CheckoutOptions)options;
+        await base.ExecuteAsync(options);
+
+        var input = (CheckoutOptions) options;
         if (UserFileService.Exists())
         {
             DisplayRepositoryExists();

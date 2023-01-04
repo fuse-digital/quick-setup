@@ -16,8 +16,9 @@ public class AddCommand : UserFilesCommandAsync, ITransientDependency
 
     public override async Task ExecuteAsync(IQupCommandOptions options)
     {
-        var input = (AddOptions) options;
+        await base.ExecuteAsync(options);
 
+        var input = (AddOptions) options;
         if (await UserFileService.PatternExistsAsync(input.Pattern))
         {
             DisplayPatternExists(input.Pattern);
