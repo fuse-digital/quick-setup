@@ -21,6 +21,7 @@ public class YamlContext : IYamlContext, ISingletonDependency
         var namingConvention = HyphenatedNamingConvention.Instance;
 
         _serializer = new SerializerBuilder()
+            .ConfigureDefaultValuesHandling(DefaultValuesHandling.OmitNull)
             .WithNamingConvention(namingConvention)
             .Build();
 

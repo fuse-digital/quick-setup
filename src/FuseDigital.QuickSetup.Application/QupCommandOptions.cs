@@ -11,4 +11,6 @@ public abstract class QupCommandOptions : IQupCommandOptions
     public LogLevel Verbosity { get; set; }
 
     public abstract Type GetCommandType();
+
+    protected const string ApplicationAlias = "qup";
 }

@@ -36,17 +36,12 @@ public class PackageManager : Entity
 
     public override object[] GetKeys()
     {
-        return new object[] { Name };
+        return new object[] {Name};
     }
 
     public async Task InstallPackagesAsync(IShellDomainService shell, IConsoleService console)
     {
-        var operatingSystem = PlatformEnvironment.CurrentOperatingSystem();
-        if (!RunsOn.Contains(operatingSystem))
-        {
-            throw new BusinessException("PM-001",
-                $"{Name} package manager is not configured to run on {operatingSystem}");
-        }
+        CheckOperatingSystem();
 
         if (string.IsNullOrEmpty(Install))
         {
@@ -62,15 +57,25 @@ public class PackageManager : Entity
         }
 
         var packages = Packages ?? new List<string>();
-        for (int index = 0; index < packages.Count; index++)
+        for (var index = 0; index < packages.Count; index++)
         {
-            await console.WriteLineAsync("[{0}/{1}] - Installing {2}", index+1, packages.Count, packages[index]);
+            await console.WriteLineAsync("[{0}/{1}] - Installing {2}", index + 1, packages.Count, packages[index]);
             await shell.RunProcessAsync(Install, packages[index]);
         }
 
         if (!string.IsNullOrEmpty(PostInstall))
         {
             await shell.RunProcessAsync(PostInstall);
+        }
+    }
+
+    private void CheckOperatingSystem()
+    {
+        var operatingSystem = PlatformEnvironment.CurrentOperatingSystem();
+        if (!RunsOn.Contains(operatingSystem))
+        {
+            throw new BusinessException("PM-001",
+                $"{Name} package manager is not configured to run on {operatingSystem}");
         }
     }
 
@@ -97,5 +102,21 @@ public class PackageManager : Entity
             Packages.Add(package);
             Packages = Packages.OrderBy(x => x).ToList();
         }
+    }
+
+    public async Task UpdatePackagesAsync(IShellDomainService shell, IConsoleService console)
+    {
+        CheckOperatingSystem();
+        
+        if (string.IsNullOrEmpty(Update))
+        {
+            throw new BusinessException("PM-003",
+                $"No update settings specified for the {Name} package manager");
+        }
+
+        await WritePackageManagerInfoAsync(console);
+        var packages = Packages ?? new List<string>();
+        await console.WriteLineAsync("Updating {0} package(s)", packages.Count);
+        await shell.RunProcessAsync(Update);
     }
 }
