@@ -1,3 +1,4 @@
+using System.IO;
 using FuseDigital.QuickSetup.Logging;
 using Microsoft.Extensions.Logging;
 using Serilog;
@@ -15,7 +16,7 @@ public class TestBaseLoggingService : ILoggingService
         Log.Logger = new LoggerConfiguration()
             .MinimumLevel.Debug()
             .Enrich.FromLogContext()
-            .WriteTo.File($"qup-unit-test-logs.txt")
+            .WriteTo.File(Path.Combine(LogDirectory, "qup-unit-test-logs.txt"))
             .CreateLogger();
     }
 
