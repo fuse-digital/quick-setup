@@ -6,6 +6,9 @@ public class QuickSetupOptions
 
     public string BaseDirectory { get; set; } = ".qup";
 
+    public string LocalApplicationDataPath { get; set; } =
+        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "QuickSetup");
+
     public string LogDirectory { get; set; } = "logs";
 
     private const char DirectorySeparatorChar = '/';
