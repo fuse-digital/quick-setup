@@ -21,7 +21,7 @@ public class QuickSetupLoggingService : ILoggingService
         set => LoggingLevel.MinimumLevel = _objectMapper.Map<LogLevel, LogEventLevel>(value);
     }
 
-    public string LogDirectory => Path.Combine(Settings.UserProfile, Settings.BaseDirectory, Settings.LogDirectory);
+    public string LogDirectory => Path.Combine(Settings.LocalApplicationDataPath, Settings.LogDirectory);
 
     private LoggingLevelSwitch LoggingLevel { get; } = new()
     {
