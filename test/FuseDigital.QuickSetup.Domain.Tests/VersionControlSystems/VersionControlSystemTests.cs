@@ -18,7 +18,7 @@ public sealed class VersionControlSystemTests : QuickSetupDomainTestBase
     private string RepoWorkingDirectory { get; }
     private string SecondRepoWorkingDirectory { get; }
     private string RemoteUrl { get; }
-    
+
     public VersionControlSystemTests()
     {
         _versionControlSystem = new VersionControlDomainService(Options)
@@ -35,7 +35,7 @@ public sealed class VersionControlSystemTests : QuickSetupDomainTestBase
     {
         // Arrange
         LogDebug();
-        _versionControlSystem.Init(RemoteUrl, new[] {"--bare", "-b", BranchName});
+        _versionControlSystem.Init(RemoteUrl, new[] { "--bare", "-b", BranchName });
 
         // Act
         _versionControlSystem.Clone(RemoteUrl, RepoRelativePath);
@@ -145,7 +145,7 @@ public sealed class VersionControlSystemTests : QuickSetupDomainTestBase
     {
         // Arrange
         LogDebug();
-        _versionControlSystem.Init(RemoteUrl, new[] {"--bare", "-b", BranchName});
+        _versionControlSystem.Init(RemoteUrl, new[] { "--bare", "-b", BranchName });
         await RenameBranch_Should_Change_The_Name_Of_The_Current_Branch();
 
         // Act
@@ -172,8 +172,10 @@ public sealed class VersionControlSystemTests : QuickSetupDomainTestBase
         _versionControlSystem.AddAll();
 
         // Assert
-        _versionControlSystem
-            .Status()
+        var status = _versionControlSystem
+            .Status();
+
+        status
             .Count(x =>
                 x.Contains("new file:", StringComparison.InvariantCultureIgnoreCase)
                 && x.Contains(Filename, StringComparison.InvariantCultureIgnoreCase))
@@ -218,7 +220,7 @@ public sealed class VersionControlSystemTests : QuickSetupDomainTestBase
     {
         // Arrange
         LogDebug();
-        _versionControlSystem.Init(RemoteUrl, new[] {"--bare", "-b", BranchName});
+        _versionControlSystem.Init(RemoteUrl, new[] { "--bare", "-b", BranchName });
         _versionControlSystem.Clone(RemoteUrl, RepoRelativePath);
         _versionControlSystem.WorkingDirectory = RepoWorkingDirectory;
         _versionControlSystem.SetConfig("user.email", "john@doe.com");

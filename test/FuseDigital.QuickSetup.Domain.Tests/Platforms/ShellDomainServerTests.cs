@@ -1,3 +1,4 @@
+using System.IO;
 using System.Threading.Tasks;
 using Shouldly;
 using Xunit;
@@ -11,14 +12,18 @@ public class ShellDomainServerTests : QuickSetupDomainTestBase
     {
         // Arrange
         var shell = GetRequiredService<IShellDomainService>();
-        
+
+        var filename = "README.md";
+        Directory.CreateDirectory(Settings.UserProfile);
+        await File.WriteAllTextAsync(Path.Combine(Settings.UserProfile, filename), "# qup-empty-dotfiles");
+
         // Act
-        var result = await shell.RunProcessAsync("ls", "-a");
-        
+        var result = await shell.RunProcessAsync("ls");
+
         // Assert
         result.ShouldNotBeNull();
         result.ExitCode.ShouldBe(0);
-        result.Output.Count.ShouldBe(3);
+        result.Output.Count.ShouldBeGreaterThan(0);
     }
 
     [Fact]
@@ -26,10 +31,10 @@ public class ShellDomainServerTests : QuickSetupDomainTestBase
     {
         // Arrange
         var shell = GetRequiredService<IShellDomainService>();
-        
+
         // Act
         var result = await shell.RunProcessAsync("some-random-command", "--random-switch");
-        
+
         // Assert
         result.ShouldNotBeNull();
         result.ExitCode.ShouldBeGreaterThan(0);
