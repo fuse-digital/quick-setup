@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using FuseDigital.QuickSetup.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Volo.Abp;
@@ -145,13 +146,10 @@ public class VersionControlDomainService : DomainService, IVersionControlDomainS
 
         var startInfo = GitCommand(arguments);
         var process = Process.Start(startInfo);
-        var processOutput = process?.StandardOutput.ReadToEnd();
+        var output = process?.StandardOutput.ReadLines();
         process?.WaitForExit();
 
-        var output = processOutput?.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries)
-                     ?? Array.Empty<string>();
-
-        Logger.LogDebug("Output {Output}", output.ToList());
+        Logger.LogDebug("Output {Output}", output);
         return output;
     }
 
