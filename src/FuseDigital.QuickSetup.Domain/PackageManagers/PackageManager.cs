@@ -36,10 +36,10 @@ public class PackageManager : Entity
 
     public override object[] GetKeys()
     {
-        return new object[] {Name};
+        return new object[] { Name };
     }
 
-    public async Task InstallPackagesAsync(IShellDomainService shell)
+    public async Task InstallPackagesAsync(IShellDomainService shell, IConsoleService console)
     {
         var operatingSystem = PlatformEnvironment.CurrentOperatingSystem();
         if (!RunsOn.Contains(operatingSystem))
@@ -54,14 +54,18 @@ public class PackageManager : Entity
                 $"No install settings specified for the {Name} package manager");
         }
 
+        await WritePackageManagerInfoAsync(console);
+
         if (!string.IsNullOrEmpty(PreInstall))
         {
             await shell.RunProcessAsync(PreInstall);
         }
 
-        foreach (var package in Packages ?? new List<string>())
+        var packages = Packages ?? new List<string>();
+        for (int index = 0; index < packages.Count; index++)
         {
-            await shell.RunProcessAsync(Install, package);
+            await console.WriteLineAsync("[{0}/{1}] - Installing {2}", index+1, packages.Count, packages[index]);
+            await shell.RunProcessAsync(Install, packages[index]);
         }
 
         if (!string.IsNullOrEmpty(PostInstall))
@@ -70,12 +74,21 @@ public class PackageManager : Entity
         }
     }
 
-    public async Task AddPackageAsync(string package, IShellDomainService shell)
+    private async Task WritePackageManagerInfoAsync(IConsoleService console)
+    {
+        await console.WriteTitleAsync(Name);
+        await console.WriteHeadingAsync(Description);
+    }
+
+    public async Task AddPackageAsync(string package, IShellDomainService shell, IConsoleService console)
     {
         if (Packages.Contains(package, StringComparer.InvariantCultureIgnoreCase))
         {
             throw new BusinessException("PM-003", $"Package {package} is already installed");
         }
+
+        await WritePackageManagerInfoAsync(console);
+        await console.WriteLineAsync("Installing {0}", package);
 
         var result = await shell.RunProcessAsync(Install, package);
 

@@ -8,7 +8,7 @@ public class EntityAlreadyExistsException : BusinessException
     /// <summary>
     /// Exceptions are logged with the Error level by default. The Log level can be determined by the exception.
     /// </summary>
-    public LogLevel LogLevel { get; set; } = LogLevel.Warning;
+    public new LogLevel LogLevel { get; set; } = LogLevel.Warning;
 
     /// <summary>
     /// Type of the entity.
