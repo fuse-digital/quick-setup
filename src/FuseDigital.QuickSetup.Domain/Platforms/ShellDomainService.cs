@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using FuseDigital.QuickSetup.Extensions;
 using FuseDigital.QuickSetup.Platforms.Dto;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -41,24 +42,23 @@ public class ShellDomainService : DomainService, IShellDomainService
             };
         }
 
-        var args = arguments
-            .JoinAsString(" ");
-
+        var args = arguments.JoinAsString(" ");
         await process.StandardInput.WriteLineAsync(args);
         await process.StandardInput.WriteLineAsync(ShellExitCommand);
-
-        var output = await process.StandardOutput.ReadToEndAsync();
-        var error = await process.StandardError.ReadToEndAsync();
+        var errorLines = await process.StandardError.ReadLinesAsync();
+        var outputLines = await process.StandardOutput.ReadLinesAsync();
         await process.WaitForExitAsync();
 
-        Logger.LogDebug("program {Program} output {Output}", ShellProgram, output);
+        Logger.LogDebug("program {Program} output {Output}", ShellProgram, outputLines);
+        Logger.LogDebug("program {Program} errors {Error}", ShellProgram, errorLines);
+
+        var output = outputLines.Concat(errorLines).ToList();
+        Logger.LogDebug("program {Program} lines {Output}", ShellProgram, output);
 
         return new RunProgramResult
         {
             ExitCode = process.ExitCode,
-            Output = process.ExitCode == 0
-                ? output.SplitToLines()
-                : error?.SplitToLines(),
+            Output = output,
         };
     }
 
