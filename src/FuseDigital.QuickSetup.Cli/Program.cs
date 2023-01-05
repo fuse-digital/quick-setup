@@ -2,6 +2,7 @@ using System;
 using Serilog;
 using System.Threading.Tasks;
 using FuseDigital.QuickSetup.Logging;
+using FuseDigital.QuickSetup.Platforms;
 using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp;
 

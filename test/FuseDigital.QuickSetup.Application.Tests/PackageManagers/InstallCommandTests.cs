@@ -22,13 +22,14 @@ public class InstallCommandTests : QuickSetupApplicationTestBase
     {
         // Arrange
         var shell = A.Fake<IShellDomainService>();
+        var console = A.Fake<IConsoleService>();
 
         var context = GetRequiredService<IYamlContext>();
         var repository = new PackageManagerRepository(context);
         await CopyFileAsync("packages.yml", repository.FilePath);
 
         var options = new InstallOptions();
-        var command = new InstallCommand(repository, shell)
+        var command = new InstallCommand(repository, shell, console)
         {
             LazyServiceProvider = GetService<IAbpLazyServiceProvider>(),
         };
@@ -61,6 +62,7 @@ public class InstallCommandTests : QuickSetupApplicationTestBase
     {
         // Arrange
         var shell = A.Fake<IShellDomainService>();
+        var console = A.Fake<IConsoleService>();
 
         var context = GetRequiredService<IYamlContext>();
         var repository = new PackageManagerRepository(context);
@@ -71,7 +73,7 @@ public class InstallCommandTests : QuickSetupApplicationTestBase
             PackageManager = "package-manager-1"
         };
 
-        var command = new InstallCommand(repository, shell)
+        var command = new InstallCommand(repository, shell, console)
         {
             LazyServiceProvider = GetService<IAbpLazyServiceProvider>(),
         };
@@ -104,6 +106,7 @@ public class InstallCommandTests : QuickSetupApplicationTestBase
     {
         // Arrange
         var shell = A.Fake<IShellDomainService>();
+        var console = A.Fake<IConsoleService>();
 
         var context = GetRequiredService<IYamlContext>();
         var repository = new PackageManagerRepository(context);
@@ -114,7 +117,7 @@ public class InstallCommandTests : QuickSetupApplicationTestBase
             PackageManager = "package-manager-3"
         };
 
-        var command = new InstallCommand(repository, shell)
+        var command = new InstallCommand(repository, shell, console)
         {
             LazyServiceProvider = GetService<IAbpLazyServiceProvider>(),
         };
@@ -135,6 +138,7 @@ public class InstallCommandTests : QuickSetupApplicationTestBase
     {
         // Arrange
         var shell = A.Fake<IShellDomainService>();
+        var console = A.Fake<IConsoleService>();
 
         var context = GetRequiredService<IYamlContext>();
         var repository = new PackageManagerRepository(context);
@@ -146,7 +150,7 @@ public class InstallCommandTests : QuickSetupApplicationTestBase
             Package = new []{"package01-01"}
         };
 
-        var command = new InstallCommand(repository, shell)
+        var command = new InstallCommand(repository, shell, console)
         {
             LazyServiceProvider = GetService<IAbpLazyServiceProvider>(),
         };
@@ -167,6 +171,7 @@ public class InstallCommandTests : QuickSetupApplicationTestBase
     {
         // Arrange
         var shell = A.Fake<IShellDomainService>();
+        var console = A.Fake<IConsoleService>();
 
         var context = GetRequiredService<IYamlContext>();
         var repository = new PackageManagerRepository(context);
@@ -178,7 +183,7 @@ public class InstallCommandTests : QuickSetupApplicationTestBase
             Package = new []{"package01-00"}
         };
 
-        var command = new InstallCommand(repository, shell)
+        var command = new InstallCommand(repository, shell, console)
         {
             LazyServiceProvider = GetService<IAbpLazyServiceProvider>(),
         };
@@ -198,6 +203,7 @@ public class InstallCommandTests : QuickSetupApplicationTestBase
     public async Task Should_Not_Add_The_Packages_When_The_Install_Failed()
     {
         // Arrange
+        var console = A.Fake<IConsoleService>();
         var shell = A.Fake<IShellDomainService>();
         A.CallTo(() => shell.RunProcessAsync("package-manager1 install -y", "package01-00"))
             .Returns(new RunProgramResult
@@ -219,7 +225,7 @@ public class InstallCommandTests : QuickSetupApplicationTestBase
             Package = new []{"package01-00"}
         };
 
-        var command = new InstallCommand(repository, shell)
+        var command = new InstallCommand(repository, shell, console)
         {
             LazyServiceProvider = GetService<IAbpLazyServiceProvider>(),
         };
