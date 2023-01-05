@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using FakeItEasy;
@@ -16,10 +15,11 @@ public class PackageManagerDomainServiceTests : QuickSetupDomainTestBase
     {
         // Arrange
         var shell = A.Fake<IShellDomainService>();
+        var console = A.Fake<IConsoleService>();
         var manager = CreatePackageManager();
 
         // Act
-        await manager.InstallPackagesAsync(shell);
+        await manager.InstallPackagesAsync(shell, console);
 
         // Assert
         A.CallTo(() => shell.RunProcessAsync(manager.PreInstall))
@@ -60,12 +60,13 @@ public class PackageManagerDomainServiceTests : QuickSetupDomainTestBase
     {
         // Arrange
         var shell = A.Fake<IShellDomainService>();
+        var console = A.Fake<IConsoleService>();
         var manager = CreatePackageManager();
         manager.PreInstall = "";
         manager.PostInstall = "";
 
         // Act
-        await manager.InstallPackagesAsync(shell);
+        await manager.InstallPackagesAsync(shell, console);
 
         // Assert
         A.CallTo(() => shell.RunProcessAsync(manager.PreInstall))
@@ -82,13 +83,14 @@ public class PackageManagerDomainServiceTests : QuickSetupDomainTestBase
     public async Task Should_Throw_An_Exception_When_Package_Manager_Is_Not_Configured_To_Run_On_Operating_System()
     {
         var shell = A.Fake<IShellDomainService>();
+        var console = A.Fake<IConsoleService>();
         var manager = CreatePackageManager();
         manager.RunsOn = new List<PlatformOperatingSystem>();
 
         // Act
         var exception = await Should.ThrowAsync<BusinessException>(async () =>
         {
-            await manager.InstallPackagesAsync(shell);
+            await manager.InstallPackagesAsync(shell, console);
         });
         
         // Assert
@@ -100,13 +102,14 @@ public class PackageManagerDomainServiceTests : QuickSetupDomainTestBase
     public async Task Should_Throw_An_Exception_When_No_Install_Command_Specified()
     {
         var shell = A.Fake<IShellDomainService>();
+        var console = A.Fake<IConsoleService>();
         var manager = CreatePackageManager();
         manager.Install = "";
 
         // Act
         var exception = await Should.ThrowAsync<BusinessException>(async () =>
         {
-            await manager.InstallPackagesAsync(shell);
+            await manager.InstallPackagesAsync(shell, console);
         });
         
         // Assert

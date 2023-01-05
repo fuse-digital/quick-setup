@@ -11,12 +11,14 @@ public class InstallCommand : QupCommandAsync, ITransientDependency
 {
     private readonly IPackageManagerRepository _repository;
     private readonly IShellDomainService _shell;
+    private readonly IConsoleService _console;
     private readonly PlatformOperatingSystem _currentOperatingSystem;
 
-    public InstallCommand(IPackageManagerRepository repository, IShellDomainService shell)
+    public InstallCommand(IPackageManagerRepository repository, IShellDomainService shell, IConsoleService console)
     {
         _repository = repository;
         _shell = shell;
+        _console = console;
         _currentOperatingSystem = PlatformEnvironment.CurrentOperatingSystem();
     }
 
@@ -50,20 +52,20 @@ public class InstallCommand : QupCommandAsync, ITransientDependency
 
         foreach (var packageManager in packageManagers)
         {
-            await packageManager.InstallPackagesAsync(_shell);
+            await packageManager.InstallPackagesAsync(_shell, _console);
         }
     }
 
     private async Task InstallPackageManagerAsync(string name)
     {
         var packageManager = await _repository.GetAsync(name);
-        await packageManager.InstallPackagesAsync(_shell);
+        await packageManager.InstallPackagesAsync(_shell, _console);
     }
 
     private async Task InstallPackage(string name, string package)
     {
         var packageManager = await _repository.GetAsync(name);
-        await packageManager.AddPackageAsync(package, _shell);
+        await packageManager.AddPackageAsync(package, _shell, _console);
         await _repository.UpdateAsync(packageManager);
     }
 }
