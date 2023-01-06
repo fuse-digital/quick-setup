@@ -206,14 +206,7 @@ public class InstallCommandTests : QuickSetupApplicationTestBase
         var console = A.Fake<IConsoleService>();
         var shell = A.Fake<IShellDomainService>();
         A.CallTo(() => shell.RunProcessAsync("package-manager1 install -y", "package01-00"))
-            .Returns(new RunProgramResult
-            {
-                ExitCode = 999,
-                Output = new List<string>
-                {
-                    "package install failed"
-                }
-            });
+            .Returns(999);
 
         var context = GetRequiredService<IYamlContext>();
         var repository = new PackageManagerRepository(context);

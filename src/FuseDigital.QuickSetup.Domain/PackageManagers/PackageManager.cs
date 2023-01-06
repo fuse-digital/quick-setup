@@ -96,8 +96,7 @@ public class PackageManager : Entity
         await console.WriteLineAsync("Installing {0}", package);
 
         var result = await shell.RunProcessAsync(Install, package);
-
-        if (result.ExitCode == 0)
+        if (result == 0)
         {
             Packages.Add(package);
             Packages = Packages.OrderBy(x => x).ToList();
@@ -107,7 +106,7 @@ public class PackageManager : Entity
     public async Task UpdatePackagesAsync(IShellDomainService shell, IConsoleService console)
     {
         CheckOperatingSystem();
-        
+
         if (string.IsNullOrEmpty(Update))
         {
             throw new BusinessException("PM-003",
@@ -115,8 +114,6 @@ public class PackageManager : Entity
         }
 
         await WritePackageManagerInfoAsync(console);
-        var packages = Packages ?? new List<string>();
-        await console.WriteLineAsync("Updating {0} package(s)", packages.Count);
         await shell.RunProcessAsync(Update);
     }
 }

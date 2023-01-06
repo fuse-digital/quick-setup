@@ -21,9 +21,7 @@ public class ShellDomainServerTests : QuickSetupDomainTestBase
         var result = await shell.RunProcessAsync("ls");
 
         // Assert
-        result.ShouldNotBeNull();
-        result.ExitCode.ShouldBe(0);
-        result.Output.Count.ShouldBeGreaterThan(0);
+        result.ShouldBe(0);
     }
 
     [Fact]
@@ -36,8 +34,6 @@ public class ShellDomainServerTests : QuickSetupDomainTestBase
         var result = await shell.RunProcessAsync("some-random-command", "--random-switch");
 
         // Assert
-        result.ShouldNotBeNull();
-        result.ExitCode.ShouldBeGreaterThan(0);
-        result.Output.Count.ShouldBeGreaterThan(0);
+        result.ShouldBeGreaterThan(0);
     }
 }

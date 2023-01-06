@@ -2,12 +2,12 @@ namespace FuseDigital.QuickSetup.Platforms;
 
 public enum PlatformOperatingSystem
 {
-    [DefaultShell("bash")]
+    [DefaultShell("bash", "-c")]
     Linux,
 
-    [DefaultShellAttribute("bash")]
+    [DefaultShellAttribute("bash", "-c")]
     macOS,
 
-    [DefaultShell("cmd.exe")]
+    [DefaultShell("cmd", "/C")]
     Windows,
 }
