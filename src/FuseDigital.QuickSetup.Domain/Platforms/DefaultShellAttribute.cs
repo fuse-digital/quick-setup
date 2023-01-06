@@ -1,14 +1,19 @@
+using Volo.Abp;
+
 namespace FuseDigital.QuickSetup.Platforms;
 
 public class DefaultShellAttribute : Attribute
 {
-    public string Program { get; set; }
+    public string Program { get; }
 
-    public string ExitCommand { get; set; }
+    public string CommandArgument { get; }
 
-    public DefaultShellAttribute(string program, string exitCommand = "exit")
+    public DefaultShellAttribute(string program, string commandArgument)
     {
+        Check.NotNullOrEmpty(program, nameof(program));
+        Check.NotNullOrEmpty(commandArgument, nameof(commandArgument));
+
         Program = program;
-        ExitCommand = exitCommand;
+        CommandArgument = commandArgument;
     }
 }

@@ -5,5 +5,5 @@ namespace FuseDigital.QuickSetup.Platforms;
 
 public interface IShellDomainService : IDomainService
 {
-    Task<RunProgramResult> RunProcessAsync(params string[] arguments);
+    Task<int> RunProcessAsync(params string[] arguments);
 }
