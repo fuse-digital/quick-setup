@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using FuseDigital.QuickSetup.PackageManagers.Dto;
 using FuseDigital.QuickSetup.Platforms;
@@ -40,7 +38,7 @@ public class UpdateCommand : QupCommandAsync, ITransientDependency
     private async Task UpdateAsync()
     {
         var packageManagers = await _repository
-            .GetListAsync(x => x.RunsOn.Contains(_currentOperatingSystem));
+            .GetListAsync(x => x.RunsOn.Contains(_currentOperatingSystem) && !string.IsNullOrEmpty(x.Update));
 
         foreach (var packageManager in packageManagers)
         {

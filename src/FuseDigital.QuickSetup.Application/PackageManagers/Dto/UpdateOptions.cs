@@ -13,7 +13,7 @@ public class UpdateOptions : QupCommandOptions
 
     public override Type GetCommandType()
     {
-        return typeof(InstallCommand);
+        return typeof(UpdateCommand);
     }
     
     [Usage(ApplicationAlias = ApplicationAlias)]
