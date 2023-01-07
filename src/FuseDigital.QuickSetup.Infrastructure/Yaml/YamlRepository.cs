@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using FuseDigital.QuickSetup.Entities;
+using FuseDigital.QuickSetup.Extensions;
 using Volo.Abp.Domain.Entities;
 using Volo.Abp.Domain.Repositories;
-using Volo.Abp.Validation;
 
 namespace FuseDigital.QuickSetup.Yaml;
 
@@ -50,23 +49,11 @@ public class YamlRepository<TEntity> : RepositoryBase<TEntity>, IYamlRepository<
         await Context.SaveToFileAsync(index, FilePath, cancellationToken);
     }
 
-    private void ValidateModel(TEntity entity)
-    {
-        var modelValidationContext = new ValidationContext(entity, serviceProvider: null, items: null);
-        var modelValidationResults = new List<ValidationResult>();
-        Validator.TryValidateObject(entity, modelValidationContext, modelValidationResults, true);
-
-        if (modelValidationResults.Count > 0)
-        {
-            throw new AbpValidationException("", modelValidationResults);
-        }
-    }
-
     public override async Task<TEntity> InsertAsync(TEntity entity, bool autoSave = false,
         CancellationToken cancellationToken = default)
     {
         var dbSet = await GetDbSetAsync(cancellationToken);
-        ValidateModel(entity);
+        entity.ValidateModel();
         if (EntityExists(dbSet, entity))
         {
             throw new EntityAlreadyExistsException(typeof(TEntity), entity.GetKeys());
@@ -87,7 +74,7 @@ public class YamlRepository<TEntity> : RepositoryBase<TEntity>, IYamlRepository<
         bool autoSave = false,
         CancellationToken cancellationToken = default)
     {
-        ValidateModel(entity);
+        entity.ValidateModel();
         var dbSet = await GetDbSetAsync(cancellationToken);
         await RemoveAsync(entity, dbSet, cancellationToken);
         dbSet.Add(entity);

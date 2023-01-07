@@ -1,12 +1,13 @@
 using System.ComponentModel.DataAnnotations;
+using FuseDigital.QuickSetup.Entities;
 using FuseDigital.QuickSetup.Platforms;
 using Volo.Abp;
-using Volo.Abp.Domain.Entities;
 
 namespace FuseDigital.QuickSetup.PackageManagers;
 
-public class PackageManager : Entity
+public class PackageManager : QupEntity
 {
+    [Key]
     [Display(Description = "The name of the package manager")]
     [Required]
     [RegularExpression(@"^[a-zA-Z0-9_-]+$")]
@@ -33,11 +34,6 @@ public class PackageManager : Entity
 
     [Display(Description = "The list of packages that are being maintained by the package manager")]
     public IList<string> Packages { get; set; } = new List<string>();
-
-    public override object[] GetKeys()
-    {
-        return new object[] {Name};
-    }
 
     public async Task InstallPackagesAsync(IShellDomainService shell, IConsoleService console)
     {
