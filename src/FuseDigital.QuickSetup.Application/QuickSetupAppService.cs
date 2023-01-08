@@ -11,6 +11,7 @@ using Microsoft.Extensions.Options;
 using Volo.Abp;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Entities;
+using Volo.Abp.Validation;
 
 namespace FuseDigital.QuickSetup;
 
@@ -36,11 +37,8 @@ public class QuickSetupAppService : ApplicationService
             await parserResult.WithParsedAsync<IQupCommandOptions>(RunCommandAsync);
             await parserResult.WithNotParsedAsync(errors => DisplayHelpAsync(parserResult, errors));
         }
-        catch (EntityNotFoundException exception)
-        {
-            Logger.LogBusinessException(exception);
-        }
-        catch (BusinessException exception)
+        catch (Exception exception)
+            when (exception is AbpValidationException or EntityNotFoundException or BusinessException)
         {
             Logger.LogBusinessException(exception);
         }
