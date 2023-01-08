@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -26,7 +27,7 @@ public class QuickSetupAppService : ApplicationService
 
     public async Task RunAsync(IEnumerable<string> args)
     {
-        Logger.LogInformation("Quick Setup CLI (https://github.com/fuse-digital/quick-setup)");
+        Logger.LogInformation("Quick Setup ({ProductVersion}) (https://github.com/fuse-digital/quick-setup)", GetProductVersion());
         Logger.LogDebug("User profile directory is set {UserProfile}", Settings.UserProfile);
         Logger.LogDebug("The base directory for QUP is set {BaseDirectory}", Settings.BaseDirectory);
 
@@ -49,17 +50,35 @@ public class QuickSetupAppService : ApplicationService
         }
     }
 
+    private string GetProductVersion()
+    {
+        var assembly = Assembly.GetEntryAssembly();
+        var version = FileVersionInfo.GetVersionInfo(assembly.Location);
+        return version.ProductVersion;
+    }
+
     private Task DisplayHelpAsync<T>(ParserResult<T> result, IEnumerable<Error> errors)
     {
-        var helpText = HelpText.AutoBuild(result, h =>
+        var errorList = errors.ToList();
+        if (errorList.IsHelp())
         {
-            h.AdditionalNewLineAfterOption = true;
-            h.Heading = "QuickSetup (QUP)";
-            h.Copyright = $"Copyright (c) {DateTime.Now.Year} by Fuse Digital (PTY) Limited";
-            return HelpText.DefaultParsingErrorsHandler(result, h);
-        }, e => e);
-        Console.WriteLine(helpText);
-
+            Console.WriteLine(HelpText.AutoBuild(result));
+        }
+        else if (errorList.IsVersion())
+        {
+            Console.WriteLine(GetProductVersion());
+        }
+        else
+        {
+            var helpText = HelpText.AutoBuild(result, h =>
+            {
+                h.AdditionalNewLineAfterOption = true;
+                h.Heading = "QuickSetup (QUP)";
+                h.Copyright = $"Copyright (c) {DateTime.Now.Year} by Fuse Digital (PTY) Limited";
+                return HelpText.DefaultParsingErrorsHandler(result, h);
+            }, e => e);
+            Console.WriteLine(helpText);
+        }
         return Task.CompletedTask;
     }
 
@@ -71,10 +90,13 @@ public class QuickSetupAppService : ApplicationService
 
     private static Type[] GetOptions()
     {
-        return Assembly.GetExecutingAssembly().GetTypes()
+        var options = Assembly.GetExecutingAssembly().GetTypes()
             .Where(t =>
                 t.GetInterfaces().Any(i => i.IsAssignableFrom(typeof(IQupCommandOptions)))
                 && t.GetCustomAttribute<VerbAttribute>() != null)
+            .OrderBy(x => x.Name)
             .ToArray();
+
+        return options;
     }
 }

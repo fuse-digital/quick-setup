@@ -38,12 +38,7 @@ public class PackageManager : QupEntity
     public async Task InstallPackagesAsync(IShellDomainService shell, IConsoleService console)
     {
         CheckOperatingSystem();
-
-        if (string.IsNullOrEmpty(Install))
-        {
-            throw new BusinessException("PM-002",
-                $"No install settings specified for the {Name} package manager");
-        }
+        CheckInstallCommand();
 
         await WritePackageManagerInfoAsync(console);
 
@@ -55,6 +50,7 @@ public class PackageManager : QupEntity
         var packages = Packages ?? new List<string>();
         for (var index = 0; index < packages.Count; index++)
         {
+            await console.WriteLineAsync();
             await console.WriteLineAsync("[{0}/{1}] - Installing {2}", index + 1, packages.Count, packages[index]);
             await shell.RunProcessAsync(Install, packages[index]);
         }
@@ -62,6 +58,15 @@ public class PackageManager : QupEntity
         if (!string.IsNullOrEmpty(PostInstall))
         {
             await shell.RunProcessAsync(PostInstall);
+        }
+    }
+
+    private void CheckInstallCommand()
+    {
+        if (string.IsNullOrEmpty(Install))
+        {
+            throw new BusinessException("PM-002",
+                $"No install settings specified for the {Name} package manager");
         }
     }
 
@@ -102,6 +107,7 @@ public class PackageManager : QupEntity
     public async Task UpdatePackagesAsync(IShellDomainService shell, IConsoleService console)
     {
         CheckOperatingSystem();
+        CheckInstallCommand();
 
         if (string.IsNullOrEmpty(Update))
         {
