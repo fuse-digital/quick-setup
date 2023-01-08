@@ -1,0 +1,27 @@
+﻿- runs-on: macOS
+  description: A description for link manager for macOS
+  create-link-format: macOS ${target} ${source}
+  links:
+    - target: sample-directory
+      source: .qup/sample-directory
+    - target: sample-file
+      source: .qup/sample-file
+
+- runs-on: Linux
+  description: A description for link manager for Linux
+  create-link-format: Linux ${target} ${source}
+  links:
+    - target: sample-directory
+      source: .qup/sample-directory
+    - target: sample-file
+      source: .qup/sample-file
+
+- runs-on: Windows
+  description: A description for link manager for Windows
+  create-link-format: Windows ${target} ${source}
+  links:
+    - target: sample-directory
+      source: .qup/sample-directory
+    - target: sample-file
+      source: .qup/sample-file
+
