@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -27,7 +26,8 @@ public class QuickSetupAppService : ApplicationService
 
     public async Task RunAsync(IEnumerable<string> args)
     {
-        Logger.LogInformation("Quick Setup ({ProductVersion}) (https://github.com/fuse-digital/quick-setup)", GetProductVersion());
+        Logger.LogInformation("Quick Setup ({ProductVersion}) (https://github.com/fuse-digital/quick-setup)",
+            GetProductVersion());
         Logger.LogDebug("User profile directory is set {UserProfile}", Settings.UserProfile);
         Logger.LogDebug("The base directory for QUP is set {BaseDirectory}", Settings.BaseDirectory);
 
@@ -52,9 +52,8 @@ public class QuickSetupAppService : ApplicationService
 
     private string GetProductVersion()
     {
-        var assembly = Assembly.GetEntryAssembly();
-        var version = FileVersionInfo.GetVersionInfo(assembly.Location);
-        return version.ProductVersion;
+        var version = Assembly.GetEntryAssembly()?.GetName().Version;
+        return version?.ToString();
     }
 
     private Task DisplayHelpAsync<T>(ParserResult<T> result, IEnumerable<Error> errors)
@@ -79,12 +78,13 @@ public class QuickSetupAppService : ApplicationService
             }, e => e);
             Console.WriteLine(helpText);
         }
+
         return Task.CompletedTask;
     }
 
     private async Task RunCommandAsync(IQupCommandOptions options)
     {
-        var command = (IQupCommandAsync) LazyServiceProvider.LazyGetRequiredService(options.GetCommandType());
+        var command = (IQupCommandAsync)LazyServiceProvider.LazyGetRequiredService(options.GetCommandType());
         await command.ExecuteAsync(options);
     }
 
