@@ -20,6 +20,21 @@ public class VersionControlDomainService : DomainService, IVersionControlDomainS
         _options = options.Value;
     }
 
+    public bool Exists(string relativePath, bool setWorkingDirectoryIfExists = true)
+    {
+        Check.NotNullOrEmpty(relativePath, nameof(relativePath));
+
+        var workingDirectory = _options.GetAbsolutePath(relativePath);
+        var exists = Directory.Exists(Path.Combine(workingDirectory, RepositoryDirectory));
+
+        if (exists && setWorkingDirectoryIfExists)
+        {
+            WorkingDirectory = workingDirectory;
+        }
+
+        return exists;
+    }
+
     public IEnumerable<string> Clone(string sourceUrl, string relativePath)
     {
         Check.NotNullOrEmpty(sourceUrl, nameof(sourceUrl));

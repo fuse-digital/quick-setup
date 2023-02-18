@@ -8,6 +8,8 @@ public interface IVersionControlDomainService : IDomainService
 
     string RepositoryDirectory { get; }
 
+    bool Exists(string relativePath, bool setWorkingDirectoryIfExists = true);
+
     IEnumerable<string> Clone(string sourceUrl, string relativePath);
 
     IEnumerable<string> Init(string workingDirectory,

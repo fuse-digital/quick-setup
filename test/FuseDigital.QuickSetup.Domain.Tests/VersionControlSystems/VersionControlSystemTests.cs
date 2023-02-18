@@ -30,6 +30,31 @@ public sealed class VersionControlSystemTests : QuickSetupDomainTestBase
         RemoteUrl = Settings.GetAbsolutePath($"~/server/dot-files.git");
     }
 
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public void Exist_Should_Check_If_Repository_Already_Exists_And_Set_Working_Directory(bool setWorkingDirectory)
+    {
+        // Arrange
+        LogDebug();
+        _versionControlSystem.Init(RemoteUrl, new[] { "--bare", "-b", BranchName });
+        _versionControlSystem.Clone(RemoteUrl, RepoRelativePath);
+        
+        // Act
+        var exist = _versionControlSystem.Exists(RepoRelativePath, setWorkingDirectory);
+
+        // Assert
+        exist.ShouldBeTrue();
+        if (!setWorkingDirectory)
+        {
+            _versionControlSystem.WorkingDirectory.ShouldBeNull();
+        }
+        else
+        {
+            _versionControlSystem.WorkingDirectory.ShouldNotBeNullOrEmpty();
+        }
+    }
+
     [Fact]
     public void Clone_Should_Create_Repository_In_Working_Directory()
     {
