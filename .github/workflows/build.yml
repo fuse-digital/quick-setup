@@ -32,5 +32,6 @@ jobs:
         uses: './.github/actions/dotnet/pack'
         if: ${{ inputs.pack }}
         with:
+          project: ./src/FuseDigital.QuickSetup.Cli/FuseDigital.QuickSetup.Cli.csproj
           pre-release-version: ${{steps.version.outputs.pre-release-version}}
           release-version: ${{steps.version.outputs.release-version}}
