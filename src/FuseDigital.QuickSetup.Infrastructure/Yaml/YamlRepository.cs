@@ -170,6 +170,11 @@ public class YamlRepository<TEntity> : RepositoryBase<TEntity>, IYamlRepository<
         await DeleteManyAsync(entities, autoSave, cancellationToken);
     }
 
+    public override Task DeleteDirectAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = new CancellationToken())
+    {
+        throw new NotImplementedException();
+    }
+
     [Obsolete("Use GetQueryableAsync method.")]
     protected override IQueryable<TEntity> GetQueryable()
     {
