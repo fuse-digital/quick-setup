@@ -131,4 +131,6 @@ public abstract class TextRepository : ITextRepository
             await DeleteAsync(entity, cancellationToken: cancellationToken);
         }
     }
+
+    public bool? IsChangeTrackingEnabled { get; } = false;
 }
