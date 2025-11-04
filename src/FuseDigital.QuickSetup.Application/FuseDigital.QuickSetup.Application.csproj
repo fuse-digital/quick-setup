@@ -3,7 +3,7 @@
     <Import Project="..\..\common.props" />
 
     <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
+        <TargetFramework>net9.0</TargetFramework>
         <RootNamespace>FuseDigital.QuickSetup</RootNamespace>
         <IsPackable>false</IsPackable>
     </PropertyGroup>
@@ -12,8 +12,8 @@
         <PackageReference Include="CommandLineParser" Version="2.9.1" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Volo.Abp.AutoMapper" Version="8.3.4" />
-        <PackageReference Include="Volo.Abp.Ddd.Application" Version="8.3.4" />
+        <PackageReference Include="Volo.Abp.AutoMapper" Version="9.3.6" />
+        <PackageReference Include="Volo.Abp.Ddd.Application" Version="9.3.6" />
     </ItemGroup>
 
     <ItemGroup>

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Crayon;
-using Figgle;
+using Figgle.Fonts;
 using FuseDigital.QuickSetup.Platforms;
 using static Crayon.Output;
 
