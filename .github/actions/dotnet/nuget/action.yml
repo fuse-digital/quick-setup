@@ -4,7 +4,7 @@ description: 'Publish NuGet packages'
 inputs:
   dotnet-version:
     description: 'The dotnet framework and SDK version.'
-    default: 7.0.x
+    default: 9.0.x
     required: true
   azure-service-principle:
     description: 'The service principle credentials for Azure to access the key vault'
