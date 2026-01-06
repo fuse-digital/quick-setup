@@ -4,7 +4,7 @@
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
-        <TargetFramework>net9.0</TargetFramework>
+        <TargetFramework>net10.0</TargetFramework>
         <PackAsTool>true</PackAsTool>
         <ToolCommandName>qup</ToolCommandName>
         <PackageOutputPath>./nupkg</PackageOutputPath>
@@ -13,7 +13,7 @@
         <PackageId>FuseDigital.QuickSetup</PackageId>
         <Authors>Fuse Digital</Authors>
         <Company>Fuse Digital (PTY) Limited</Company>
-        <Copyright>Copyright (c) Fuse Digital (PTY) LTD 2022</Copyright>
+        <Copyright>Copyright (c) Fuse Digital (PTY) LTD 2026</Copyright>
         <Description>
             QuickSetup (QUP) is a command line tool designed to streamline the process of setting up a new machine and
             installing the required software. With just a few simple commands, QUP can help you get your new machine up
@@ -28,10 +28,10 @@
 
     <ItemGroup>
         <PackageReference Include="Figgle.Fonts" Version="0.6.5" />
-        <PackageReference Include="Serilog.Extensions.Logging" Version="9.0.2" />
+        <PackageReference Include="Serilog.Extensions.Logging" Version="10.0.0" />
         <PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
         <PackageReference Include="Serilog.Sinks.Console" Version="6.1.1" />
-        <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="9.0.10" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="10.0.1" />
         <PackageReference Include="Figgle" Version="0.6.5" />
         <PackageReference Include="Crayon" Version="2.0.69" />
     </ItemGroup>
