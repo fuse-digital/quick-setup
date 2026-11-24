@@ -133,4 +133,8 @@ public abstract class TextRepository : ITextRepository
     }
 
     public bool? IsChangeTrackingEnabled { get; } = false;
+
+    public string EntityName { get; set; }
+
+    public string ProviderName { get; } = "Text";
 }

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
+using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.Autofac;
+using Volo.Abp.Mapperly;
 using Volo.Abp.Modularity;
 
 namespace FuseDigital.QuickSetup.Cli;
@@ -9,12 +11,14 @@ namespace FuseDigital.QuickSetup.Cli;
 [DependsOn(
     typeof(QuickSetupApplicationModule),
     typeof(QuickSetupInfrastructureModule),
-    typeof(AbpAutofacModule)
+    typeof(AbpAutofacModule),
+    typeof(AbpMapperlyModule)
 )]
 public class QuickSetupCliModule : AbpModule
 {
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
+        context.Services.AddMapperlyObjectMapper<QuickSetupCliModule>();
         base.ConfigureServices(context);
         Configure<QuickSetupOptions>(options =>
         {
