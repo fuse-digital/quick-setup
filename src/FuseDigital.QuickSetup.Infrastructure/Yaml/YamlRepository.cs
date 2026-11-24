@@ -24,6 +24,7 @@ public class YamlRepository<TEntity> : RepositoryBase<TEntity>, IYamlRepository<
     private IYamlContext Context { get; }
 
     protected YamlRepository(IYamlContext context)
+        : base("Yaml")
     {
         Context = context;
     }
